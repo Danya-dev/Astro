@@ -26,18 +26,17 @@ class Menu():
             pg.display.flip()
 class Rocket():
     def __init__(self):
-        self.coord = (50, 400)
+        self.coord = [50, 400]
+        self.velocity = [0,0]
         
+    def motion(self):
+        self.coord[0] += self.velocity[0]
+        self.coord[1] += self.velocity[1]
+    
         
     def draw(self): 
         pg.draw.circle(screen, (255,255,255),
                      self.coord, 20)
-        
-    
-    
-    
-        
-        
         
     
 class Level(): 
@@ -53,17 +52,39 @@ class Level_1(Level):
         done = False
         while not done: #обработка событий
             clock.tick(15)
-            
+            screen.fill((0,0,0))
             for event in events.get():
                 if event.type == pg.QUIT:
                     done = True
                 elif event.type == pg.KEYDOWN:
-                    return Level_1()
+                    self.rocket.velocity = (3,3)
+                    self.process(clock, events)
             self.drawthemall()
+            pg.display.flip()
+            
+    def process(self, clock, events):
+            
+        done = False
+        while not done: #обработка событий
+            clock.tick(15)
+            screen.fill((0,0,0))
+            for event in events.get():
+                if event.type == pg.QUIT:
+                    done = True
+            self.movethemall()
+            
+            self.drawthemall()
+                
+                
             pg.display.flip()
         
     def drawthemall(self):
         self.rocket.draw()
+        
+        
+    def movethemall(self):
+        self.rocket.motion()
+    
     
 class GameObject():
     pass
