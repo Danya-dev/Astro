@@ -8,27 +8,62 @@ SCREEN_SIZE = (800, 600)
 class button():
     pass
     
-class Menu():
+class Menu(): 
 
         
-    def menufunc(self, clock, events):
+    def menufunc(self, clock, events): # функция меню 
         done = False
-        while not done:
+        while not done: #обработка событий
             clock.tick(15)
     
             for event in events.get():
                 if event.type == pg.QUIT:
                     done = True
                 elif event.type == pg.KEYDOWN:
-                    return Level_1()
+                    return Level_1(clock, events)
                 
                 
             pg.display.flip()
+class Rocket():
+    def __init__(self):
+        self.coord = (50, 400)
+        
+        
+    def draw(self): 
+        pg.draw.circle(screen, (255,255,255),
+                     self.coord, 20)
+        
     
-class Level():
+    
+    
+        
+        
+        
+    
+class Level(): 
     pass
+
 class Level_1(Level):
-    pass
+    def __init__(self,clock, events):
+        self.rocket = Rocket()
+        
+        self.start(clock,events)
+        
+    def start(self, clock, events):            
+        done = False
+        while not done: #обработка событий
+            clock.tick(15)
+            
+            for event in events.get():
+                if event.type == pg.QUIT:
+                    done = True
+                elif event.type == pg.KEYDOWN:
+                    return Level_1()
+            self.drawthemall()
+            pg.display.flip()
+        
+    def drawthemall(self):
+        self.rocket.draw()
     
 class GameObject():
     pass
