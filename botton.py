@@ -36,6 +36,4 @@ class Botton():
                     return True
         else:
             return False
-        
-def init(screen, coords, width, height, color, text):
-    return Botton(screen, coords, width, height, color, text)
+    

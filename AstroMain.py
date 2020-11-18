@@ -12,12 +12,12 @@ class Menu():
         '''Класс меню. Реализует отрисовку меню и функции меню.'''
         def __init__(self, screen):
             self.screen = screen
-            self.levels = botton.init(self.screen, [100, 50], 120, 40, (255, 0, 0), "Уровни")
-            self.settings = botton.init(self.screen, [100, 100], 120, 40, (255, 0, 0), "Настройки")
-            self.info = botton.init(self.screen, [100, 150], 120, 40, (255, 0, 0), "Об игре")
-            self.back = botton.init(self.screen, [100, 500], 120, 40, (255, 0, 0), "Назад")
+            self.levels = botton.Botton(self.screen, [100, 50], 120, 40, (255, 0, 0), "Уровни")
+            self.settings = botton.Botton(self.screen, [100, 100], 120, 40, (255, 0, 0), "Настройки")
+            self.info = botton.Botton(self.screen, [100, 150], 120, 40, (255, 0, 0), "Об игре")
+            self.back = botton.Botton(self.screen, [100, 500], 120, 40, (255, 0, 0), "Назад")
             self.position = 1
-            self.level_1 = botton.init(self.screen, [100, 50], 120, 40, (255, 0, 0), "Уровень 1")
+            self.level_1 = botton.Botton(self.screen, [100, 50], 120, 40, (255, 0, 0), "Уровень 1")
         
         def menufunc(self, clock, events): # функция меню 
             done = False
