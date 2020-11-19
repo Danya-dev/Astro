@@ -28,7 +28,7 @@ class Menu():
             pg.display.flip()
 class Rocket(): #класс ракета
     def __init__(self):
-        self.coord = [50, 300]
+        self.coord = [50, 300] 
         self.velocity = [0,0]
         
     def motion(self): #функция движения
@@ -45,7 +45,7 @@ class Rocket(): #класс ракета
         for planet in planets: 
 
             distance = math.sqrt((self.coord[0] - planet.coord[0])**2 + 
-                                 (self.coord[1] - planet.coord[1])**2)
+                                  (self.coord[1] - planet.coord[1])**2)
             cos = (self.coord[0] - planet.coord[0]) / distance
             acceleration = G * planet.mass / distance**2
             sin = (self.coord[1] - planet.coord[1]) / distance
@@ -63,7 +63,7 @@ class Rocket(): #класс ракета
         for i in range(10):
             for planet in planets: 
                 distance = math.sqrt((c0 - planet.coord[0])**2 + 
-                                 (c1 - planet.coord[1])**2)
+                                  (c1 - planet.coord[1])**2)
                 cos = (c0 - planet.coord[0]) / distance
                 acceleration = G * planet.mass / distance**2
                 sin = (c1 - planet.coord[1]) / distance
@@ -73,7 +73,7 @@ class Rocket(): #класс ракета
                 c0 += v0
                 c1 += v1
                 
-        pg.draw.aalines(pg.display.set_mode(SCREEN_SIZE), (0, 255, 0), False, A, 5)
+        pg.draw.aalines(screen, (0, 255, 0), False, A, 5)
 
         
 class Planet(): 
@@ -89,36 +89,57 @@ class Planet():
 class Level(): 
     pass
 
+
 class Level_1(Level):
     def __init__(self,clock, events):
         self.rocket = Rocket()
         self.planets = []
-        self.planets.append(Planet(400, 200, 20, 1000000))
+        self.planets.append(Planet(400, 300, 80, 200000))
         
         
         
-        self.start(clock,events)
+        
+        if self.start(clock, events) :
+            self.process(clock, events)
      #функция обрабатывает запуск ракеты  
     def start(self, clock, events):            
         done = False
+        launchbool = False
+        force = 0.2
+        rocdirect = [1,0]
         while not done: #обработка событий
-            clock.tick(15)
-            screen.fill((0,0,0))
+            clock.tick(30 )
+            screen.fill((0,0,0))            
             for event in events.get():
                 if event.type == pg.QUIT:
                     done = True
-                elif event.type == pg.KEYDOWN:
-                    self.rocket.velocity = [3,-6]
-                    #теперь обрабатывать события будет функция process
-                    self.process(clock, events)
+                elif event.type == pg.MOUSEBUTTONDOWN :
+                    if event.button == 1:                
+                        launchbool = True    
+                elif launchbool and event.type == pg.MOUSEMOTION:
+                    rocdirect = [self.rocket.coord[0] - event.pos[0],
+                                 self.rocket.coord[1] - event.pos[1] ]
+                        
+                elif launchbool and event.type == pg.MOUSEBUTTONUP:
+                    if event.button == 1 :
+                        
+                        pg.draw.circle(screen,(233,100,8),(100,100),50 )
+                        mod = math.sqrt(rocdirect[0]**2 + rocdirect[1]**2)                       
+                        self.rocket.velocity = [round(math.exp(force) * rocdirect[0] / mod),
+                                                round(math.exp(force) * rocdirect[1] / mod)]
+                        return True
+                if launchbool :
+                    force += 0.2 
+                        
             self.drawthemall()
             pg.display.flip()
-            
+        
+          
     def process(self, clock, events):
         #функция обрабатывает полет ракеты    
         done = False
         while not done: #обработка событий
-            clock.tick(15)
+            clock.tick(30)
             screen.fill((0,0,0))
             for event in events.get():
                 if event.type == pg.QUIT:
