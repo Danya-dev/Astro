@@ -195,7 +195,7 @@ pg.display.set_caption("Astro")
 clock = pg.time.Clock()
 menu = Menu(screen)    
 
-menu.menufunc(clock, pg.event)
+level = menu.menufunc(clock, pg.event)
 
 pg.quit()
 
