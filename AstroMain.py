@@ -87,8 +87,11 @@ class Menu():
           
 class Rocket(): #класс ракета
     def __init__(self):
+
         self.coord = [100, 300]  # Координаты на экране в пикселах.
         self.real_coord = [100*scale_param, 300*scale_param]  # Координаты в пространстве. 
+
+
         self.velocity = [0,0]
         
     def motion(self): #функция движения
@@ -106,9 +109,11 @@ class Rocket(): #класс ракета
         G = 6.67408E-11
         for planet in planets: 
 
+
             distance = math.sqrt((self.real_coord[0] - planet.real_coord[0])**2 + 
                                  (self.real_coord[1] - planet.real_coord[1])**2)
             cos = (self.real_coord[0] - planet.real_coord[0]) / distance
+
             acceleration = G * planet.mass / distance**2
             sin = (self.real_coord[1] - planet.real_coord[1]) / distance
             self.velocity[0] -= acceleration * cos * dt
@@ -124,9 +129,11 @@ class Rocket(): #класс ракета
         A = []
         for i in range(50):
             for planet in planets: 
+
                 distance = math.sqrt((c0 - planet.real_coord[0])**2 + 
                                   (c1 - planet.real_coord[1])**2)
                 cos = (c0 - planet.real_coord[0]) / distance
+
                 acceleration = G * planet.mass / distance**2
                 sin = (c1 - planet.real_coord[1]) / distance
                 v0 -= acceleration * cos * dt
@@ -157,7 +164,10 @@ class Level_1(Level):
     def __init__(self,clock, events):
         self.rocket = Rocket()
         self.planets = []
+
         self.planets.append(Planet(400, 300, 40, 2E+30))
+
+
         
         
         
@@ -168,7 +178,9 @@ class Level_1(Level):
     def start(self, clock, events):            
         done = False
         launchbool = False
+
         force = 6
+
         rocdirect = [1,0]
         while not done: #обработка событий
             clock.tick(30 )
@@ -202,7 +214,9 @@ class Level_1(Level):
         #функция обрабатывает полет ракеты    
         done = False
         while not done: #обработка событий
+
             clock.tick(FPS)
+
             screen.fill((0,0,0))
             for event in events.get():
                 if event.type == pg.QUIT:
