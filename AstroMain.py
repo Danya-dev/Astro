@@ -155,6 +155,13 @@ class Planet():
         pg.draw.circle(screen, (255,0,50),
                        self.coord, self.rad)
     
+class Dust(pg.Rect):
+    def draw(self):
+        pg.draw.rect(screen, (0,255,0), self)
+        
+class Finish(pg.Rect):
+    def draw(self):
+        pg.draw.rect(screen, (255,0,0), self)
     
 class Level(): 
     pass
@@ -162,25 +169,32 @@ class Level():
 
 class Level_1(Level):
     def __init__(self,clock, events):
+        gamegoes = True
+        while gamegoes:
+            self.preparation()
+            self.start(clock, events)
+            gamegoes = self.process(clock, events)
+        menu.menufunc(clock, events)
+            
+            
+            
+    def preparation(self):
         self.rocket = Rocket()
         self.planets = []
-
+        self.dustclouds = []
+        self.objfinish = Finish(500, 300, 20, 20)
         self.planets.append(Planet(400, 300, 40, 2E+30))
-
-
-        
-        
-        
-        
-        if self.start(clock, events) :
-            self.process(clock, events)
+        self.width = 30
+        self.dustclouds.append(Dust(0, 0,SCREEN_SIZE[0] , self.width))
+        self.dustclouds.append(Dust(0,0, self.width, SCREEN_SIZE[1]))
+        self.dustclouds.append(Dust(0,SCREEN_SIZE[1] - self.width,SCREEN_SIZE[0], self.width ))
+        #self.dustclouds.append(Dust(SCREEN_SIZE[0] - self.width,0, self.width, SCREEN_SIZE[1]))
+                
      #функция обрабатывает запуск ракеты  
     def start(self, clock, events):            
         done = False
         launchbool = False
-
         force = 6
-
         rocdirect = [1,0]
         while not done: #обработка событий
             clock.tick(30 )
@@ -202,7 +216,7 @@ class Level_1(Level):
                         mod = math.sqrt(rocdirect[0]**2 + rocdirect[1]**2)                       
                         self.rocket.velocity = [round(math.exp(force) * rocdirect[0] / mod),
                                                 round(math.exp(force) * rocdirect[1] / mod)]
-                        return True
+                        return None
                 if launchbool :
                     force += 0.2 
                         
@@ -221,9 +235,15 @@ class Level_1(Level):
             for event in events.get():
                 if event.type == pg.QUIT:
                     done = True
+
+                        
             self.rocket.gravity(self.planets)
             self.movethemall()
             self.drawthemall()
+            if self.oncollision():
+                return True
+            if self.finish():
+                return False
             
             pg.display.flip()
         
@@ -232,13 +252,23 @@ class Level_1(Level):
         
         for planet in self.planets:
             planet.draw()
+        for dust in self.dustclouds :
+            dust.draw()
     
 
         self.rocket.draw()
-        
+        self.objfinish.draw()
         
     def movethemall(self):
         self.rocket.motion()
+        
+    def oncollision(self):
+        for dust in self.dustclouds:
+            if dust.collidepoint(self.rocket.coord[0], self.rocket.coord[1]):
+                return True
+    def finish(self):
+        return self.objfinish.collidepoint(self.rocket.coord[0], self.rocket.coord[1])
+                                    
     
     
 screen = pg.display.set_mode(SCREEN_SIZE)
@@ -247,7 +277,7 @@ pg.display.set_caption("Astro")
 clock = pg.time.Clock()
 menu = Menu(screen)    
 
-level = menu.menufunc(clock, pg.event)
+menu.menufunc(clock, pg.event)
 
 pg.quit()
 
