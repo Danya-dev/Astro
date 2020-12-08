@@ -89,6 +89,9 @@ def runge_kutta(coor, vel, planets):
     vel[1] += (k1[3] + 2*k2[3] + 2*k3[3] + k4[3])*dt / 6
     return coor, vel
 
+def rotation(surface):
+    return pg.transform.rotate(surface, 1)
+
 class Menu():
         '''Класс меню. Реализует отрисовку меню и функции меню.'''
         def __init__(self, screen):
@@ -159,23 +162,25 @@ class Menu():
             pass            
           
           
-class Rocket(): #класс ракета
-    def __init__(self):
-
+class Rocket(pg.sprite.Sprite): #класс ракета
+    def __init__(self, filename):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.image.load(filename).convert_alpha()
         self.coord = [100, 300]  # Координаты на экране в пикселах.
         self.real_coord = [100*scale_param, 300*scale_param]  # Координаты в пространстве. 
-
+        self.rect = self.image.get_rect(center=(self.coord[0], self.coord[1]))
 
         self.velocity = [0,0]
         
     def motion(self): #функция движения
         self.coord[0] = int(self.real_coord[0] / scale_param)
         self.coord[1] = int(self.real_coord[1] / scale_param)
+        self.rect = self.image.get_rect(center=(self.coord[0], self.coord[1]))
     
         
-    def draw(self): #рисуем ракету каждый clock.tick
+    """def draw(self): #рисуем ракету каждый clock.tick
         pg.draw.circle(screen, (255,255,255),
-                     self.coord, 20)
+                     self.coord, 20)"""
     def gravity(self, planets): 
         """ гравитация. принимаем на вход массив планет """
         z = runge_kutta(self.real_coord, self.velocity, planets)
@@ -190,7 +195,7 @@ class Rocket(): #класс ракета
         c0 = self.real_coord[0]
         c1 = self.real_coord[1]
         A = []
-        for i in range(50):
+        for i in range(200):
             for planet in planets: 
 
                 distance = math.sqrt((c0 - planet.real_coord[0])**2 + 
@@ -222,6 +227,18 @@ class Dust(pg.Rect):
     def draw(self):
         pg.draw.rect(screen, (0,255,0), self)
         
+class Asteroid(pg.sprite.Sprite):
+    def __init__(self, filename, x, y, rad, mass):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.image.load(filename).convert_alpha()
+        self.coord = [x,y]  # Координаты на экране в пикселах.
+        self.real_coord = [x*scale_param, y*scale_param]  # Координаты в пространстве.  
+        self.rad = rad
+        self.mass = mass        
+        self.rect = self.image.get_rect(center=(self.coord[0], self.coord[1]))
+    
+        
+        
 class Finish(pg.Rect):
     def draw(self):
         pg.draw.rect(screen, (255,0,0), self)
@@ -242,12 +259,14 @@ class Level_1(Level):
             
             
     def preparation(self):
-        self.rocket = Rocket()
+        self.rocket = Rocket("Rocket.png")
         self.planets = []
         self.dustclouds = []
+        self.asteroids = []
         self.objfinish = Finish(500, 300, 20, 20)
         self.planets.append(Planet(400, 300, 40, 8E+28))
         self.width = 30
+        self.asteroids.append(Asteroid("Asteroid.png", 200, 200, 40, 10))
         self.dustclouds.append(Dust(0, 0,SCREEN_SIZE[0] , self.width))
         self.dustclouds.append(Dust(0,0, self.width, SCREEN_SIZE[1]))
         self.dustclouds.append(Dust(0,SCREEN_SIZE[1] - self.width,SCREEN_SIZE[0], self.width ))
@@ -317,13 +336,14 @@ class Level_1(Level):
             planet.draw()
         for dust in self.dustclouds :
             dust.draw()
-    
+        for asteroid in self.asteroids :
+            screen.blit(asteroid.image, asteroid.rect)    
 
-        self.rocket.draw()
+        screen.blit(self.rocket.image, self.rocket.rect)
         self.objfinish.draw()
         
     def movethemall(self):
-        self.rocket.motion()
+        self.rocket.motion()      
         
     def oncollision(self):
         for dust in self.dustclouds:
