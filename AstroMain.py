@@ -166,22 +166,32 @@ class Rocket(pg.sprite.Sprite): #класс ракета
     def __init__(self, filename):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.image.load(filename).convert_alpha()
+        self.w , self.h = self.image.get_size()
         self.coord = [100, 300]  # Координаты на экране в пикселах.
         self.real_coord = [100*scale_param, 300*scale_param]  # Координаты в пространстве. 
         self.rect = self.image.get_rect(center=(self.coord[0], self.coord[1]))
         self.mask = pg.mask.from_surface(self.image)
-
+        self.angle = 0
         self.velocity = [0,0]
         
     def motion(self): #функция движения
+        self.findangle(self.velocity)
         self.coord[0] = int(self.real_coord[0] / scale_param)
         self.coord[1] = int(self.real_coord[1] / scale_param)
         self.rect = self.image.get_rect(center=(self.coord[0], self.coord[1]))
-    
         
-    """def draw(self): #рисуем ракету каждый clock.tick
-        pg.draw.circle(screen, (255,255,255),
-                     self.coord, 20)"""
+    def findangle(self, direction):
+        if direction[0] > 0:
+           self.angle = math.degrees(math.atan2(-direction[1], direction[0]) )
+        if direction[0] < 0:
+           self.angle = math.degrees(math.atan2(-direction[1], direction[0]) - math.pi)   
+           
+    def draw(self, surf, image, topleft, angle):
+            rotated_image = pg.transform.rotate(image, angle)
+            new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
+
+            surf.blit(rotated_image, new_rect.topleft)
+            pg.draw.rect(surf, (255, 0, 0), new_rect, 2)
     def gravity(self, planets): 
         """ гравитация. принимаем на вход массив планет """
         z = runge_kutta(self.real_coord, self.velocity, planets)
@@ -296,7 +306,7 @@ class Level_1(Level):
                 elif launchbool and event.type == pg.MOUSEMOTION:
                     rocdirect = [self.rocket.coord[0] - event.pos[0],
                                  self.rocket.coord[1] - event.pos[1] ]
-                        
+                    self.rocket.findangle(rocdirect)   
                 elif launchbool and event.type == pg.MOUSEBUTTONUP:
                     if event.button == 1 :
                         
@@ -343,9 +353,12 @@ class Level_1(Level):
         for dust in self.dustclouds :
             dust.draw()
         for asteroid in self.asteroids :
-            screen.blit(asteroid.image, asteroid.rect)    
+            screen.blit(asteroid.image, asteroid.rect)  
+        corner_cords = [self.rocket.coord[0] - self.rocket.w/2,
+                        self.rocket.coord[1] - self.rocket.h/2]
+        self.rocket.draw(screen, self.rocket.image, corner_cords, self.rocket.angle)
 
-        screen.blit(self.rocket.image, self.rocket.rect)
+        
         screen.blit(self.objfinish.image, self.objfinish.rect)
         
         
