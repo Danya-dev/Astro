@@ -15,6 +15,80 @@ scale_param = 5E+8
 Мера: количество пикселей на один метр."""
     
   
+def runge_kutta(coor, vel, planets):
+    G = 6.67408E-11    
+    x = coor[0]
+    y = coor[1]
+    vx = vel[0]
+    vy = vel[1]
+    ax = 0
+    ay = 0
+        
+    for planet in planets: 
+        distance = math.sqrt((x - planet.real_coord[0])**2 + 
+                         (y - planet.real_coord[1])**2)
+        cos = (x - planet.real_coord[0]) / distance
+        sin = (y - planet.real_coord[1]) / distance
+        acceleration = G * planet.mass / distance**2
+        ax -= G * planet.mass / distance**2 * cos
+        ay -= G * planet.mass / distance**2 * sin
+            
+    k1 = [vx, vy, ax, ay]
+        
+    x2 = x + 0.5 * dt * vx
+    y2 = y + 0.5 * dt * vy
+    vx2 = vx + 0.5 * dt * ax
+    vy2 = vy + 0.5 * dt * ay
+    
+    for planet in planets: 
+        distance = math.sqrt((x2 - planet.real_coord[0])**2 + 
+                         (y2 - planet.real_coord[1])**2)
+        cos = (x2 - planet.real_coord[0]) / distance
+        sin = (y2 - planet.real_coord[1]) / distance
+        acceleration = G * planet.mass / distance**2
+        ax2 = 0 - G * planet.mass / distance**2 * cos
+        ay2 = 0 - G * planet.mass / distance**2 * sin
+            
+    k2 = [vx2, vy2, ax2, ay2]
+        
+    x3 = x + 0.5 * dt * vx2
+    y3 = y + 0.5 * dt * vy2
+    vx3 = vx + 0.5 * dt * ax2
+    vy3 = vy + 0.5 * dt * ay2
+        
+    for planet in planets: 
+        distance = math.sqrt((x3 - planet.real_coord[0])**2 + 
+                         (y3 - planet.real_coord[1])**2)
+        cos = (x3 - planet.real_coord[0]) / distance
+        sin = (y3 - planet.real_coord[1]) / distance
+        acceleration = G * planet.mass / distance**2
+        ax3 = 0 - G * planet.mass / distance**2 * cos
+        ay3 = 0 - G * planet.mass / distance**2 * sin
+            
+    k3 = [vx3, vy3, ax3, ay3]
+        
+    x4 = x + dt * vx3
+    y4 = y + dt * vy3
+    vx4 = vx + dt * ax3
+    vy4 = vy + dt * ay3
+        
+    for planet in planets: 
+        distance = math.sqrt((x4 - planet.real_coord[0])**2 + 
+                         (y4 - planet.real_coord[1])**2)
+        cos = (x4 - planet.real_coord[0]) / distance
+        sin = (y4 - planet.real_coord[1]) / distance
+        acceleration = G * planet.mass / distance**2
+        ax4 = 0 - G * planet.mass / distance**2 * cos
+        ay4 = 0 - G * planet.mass / distance**2 * sin
+            
+    k4 = [vx4, vy4, ax4, ay4]
+
+    coor[0] += (k1[0] + 2*k2[0] + 2*k3[0] + k4[0])*dt / 6
+    coor[1] += (k1[1] + 2*k2[1] + 2*k3[1] + k4[1])*dt / 6
+    vel[0] += (k1[2] + 2*k2[2] + 2*k3[2] + k4[2])*dt / 6
+    vel[1] += (k1[3] + 2*k2[3] + 2*k3[3] + k4[3])*dt / 6
+    return coor, vel
+
 class Menu():
         '''Класс меню. Реализует отрисовку меню и функции меню.'''
         def __init__(self, screen):
@@ -95,8 +169,6 @@ class Rocket(): #класс ракета
         self.velocity = [0,0]
         
     def motion(self): #функция движения
-        self.real_coord[0] += self.velocity[0] * dt
-        self.real_coord[1] += self.velocity[1] * dt
         self.coord[0] = int(self.real_coord[0] / scale_param)
         self.coord[1] = int(self.real_coord[1] / scale_param)
     
@@ -106,18 +178,9 @@ class Rocket(): #класс ракета
                      self.coord, 20)
     def gravity(self, planets): 
         """ гравитация. принимаем на вход массив планет """
-        G = 6.67408E-11
-        for planet in planets: 
-
-
-            distance = math.sqrt((self.real_coord[0] - planet.real_coord[0])**2 + 
-                                 (self.real_coord[1] - planet.real_coord[1])**2)
-            cos = (self.real_coord[0] - planet.real_coord[0]) / distance
-
-            acceleration = G * planet.mass / distance**2
-            sin = (self.real_coord[1] - planet.real_coord[1]) / distance
-            self.velocity[0] -= acceleration * cos * dt
-            self.velocity[1] -= acceleration * sin * dt 
+        z = runge_kutta(self.real_coord, self.velocity, planets)
+        self.real_coord = z[0]
+        self.velocity = z[1]
     
     def trajectory(self, planets):
         """ траектория по которой будет двигаться ракета, если двигатели не будут работать"""
@@ -183,7 +246,7 @@ class Level_1(Level):
         self.planets = []
         self.dustclouds = []
         self.objfinish = Finish(500, 300, 20, 20)
-        self.planets.append(Planet(400, 300, 40, 2E+30))
+        self.planets.append(Planet(400, 300, 40, 8E+28))
         self.width = 30
         self.dustclouds.append(Dust(0, 0,SCREEN_SIZE[0] , self.width))
         self.dustclouds.append(Dust(0,0, self.width, SCREEN_SIZE[1]))
