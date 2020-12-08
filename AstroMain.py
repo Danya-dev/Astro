@@ -169,6 +169,7 @@ class Rocket(pg.sprite.Sprite): #класс ракета
         self.coord = [100, 300]  # Координаты на экране в пикселах.
         self.real_coord = [100*scale_param, 300*scale_param]  # Координаты в пространстве. 
         self.rect = self.image.get_rect(center=(self.coord[0], self.coord[1]))
+        self.mask = pg.mask.from_surface(self.image)
 
         self.velocity = [0,0]
         
@@ -236,12 +237,17 @@ class Asteroid(pg.sprite.Sprite):
         self.rad = rad
         self.mass = mass        
         self.rect = self.image.get_rect(center=(self.coord[0], self.coord[1]))
+        self.mask = pg.mask.from_surface(self.image)
     
         
         
-class Finish(pg.Rect):
-    def draw(self):
-        pg.draw.rect(screen, (255,0,0), self)
+class Finish(pg.sprite.Sprite):
+    def __init__(self, filename, x, y):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.image.load(filename).convert_alpha()
+        self.coord = [x,y]  # Координаты на экране в пикселах.       
+        self.rect = self.image.get_rect(center=(self.coord[0], self.coord[1]))
+        self.mask = pg.mask.from_surface(self.image)
     
 class Level(): 
     pass
@@ -263,7 +269,7 @@ class Level_1(Level):
         self.planets = []
         self.dustclouds = []
         self.asteroids = []
-        self.objfinish = Finish(500, 300, 20, 20)
+        self.objfinish = Finish("Earth.png",500, 300)
         self.planets.append(Planet(400, 300, 40, 8E+28))
         self.width = 30
         self.asteroids.append(Asteroid("Asteroid.png", 200, 200, 40, 10))
@@ -340,7 +346,8 @@ class Level_1(Level):
             screen.blit(asteroid.image, asteroid.rect)    
 
         screen.blit(self.rocket.image, self.rocket.rect)
-        self.objfinish.draw()
+        screen.blit(self.objfinish.image, self.objfinish.rect)
+        
         
     def movethemall(self):
         self.rocket.motion()      
@@ -349,8 +356,23 @@ class Level_1(Level):
         for dust in self.dustclouds:
             if dust.collidepoint(self.rocket.coord[0], self.rocket.coord[1]):
                 return True
+        for asteroid in self.asteroids:
+            r1 = int(self.rocket.coord[0] - self.rocket.image.get_width()/2)
+            r2 = int(self.rocket.coord[1] - self.rocket.image.get_height()/2)
+            a1 = int(asteroid.coord[0] - asteroid.image.get_width()/2)
+            a2 = int(asteroid.coord[1] - asteroid.image.get_height()/2)
+            offset = (r1 - a1, r2 - a2)
+            if asteroid.mask.overlap_area(self.rocket.mask, offset) > 0:
+                return True
+            
     def finish(self):
-        return self.objfinish.collidepoint(self.rocket.coord[0], self.rocket.coord[1])
+        r1 = int(self.rocket.coord[0] - self.rocket.image.get_width()/2)
+        r2 = int(self.rocket.coord[1] - self.rocket.image.get_height()/2)
+        a1 = int(self.objfinish.coord[0] - self.objfinish.image.get_width()/2)
+        a2 = int(self.objfinish.coord[1] - self.objfinish.image.get_height()/2)
+        offset = (r1 - a1, r2 - a2)
+        if self.objfinish.mask.overlap_area(self.rocket.mask, offset) > 0:
+            return True
                                     
     
     
