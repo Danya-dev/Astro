@@ -31,7 +31,6 @@ def runge_kutta(coor, vel, planets):
                          (y - planet.real_coord[1])**2)
         cos = (x - planet.real_coord[0]) / distance
         sin = (y - planet.real_coord[1]) / distance
-        acceleration = G * planet.mass / distance**2
         ax -= G * planet.mass / distance**2 * cos
         ay -= G * planet.mass / distance**2 * sin
             
@@ -47,7 +46,6 @@ def runge_kutta(coor, vel, planets):
                          (y2 - planet.real_coord[1])**2)
         cos = (x2 - planet.real_coord[0]) / distance
         sin = (y2 - planet.real_coord[1]) / distance
-        acceleration = G * planet.mass / distance**2
         ax2 = 0 - G * planet.mass / distance**2 * cos
         ay2 = 0 - G * planet.mass / distance**2 * sin
             
@@ -63,7 +61,6 @@ def runge_kutta(coor, vel, planets):
                          (y3 - planet.real_coord[1])**2)
         cos = (x3 - planet.real_coord[0]) / distance
         sin = (y3 - planet.real_coord[1]) / distance
-        acceleration = G * planet.mass / distance**2
         ax3 = 0 - G * planet.mass / distance**2 * cos
         ay3 = 0 - G * planet.mass / distance**2 * sin
             
@@ -79,7 +76,6 @@ def runge_kutta(coor, vel, planets):
                          (y4 - planet.real_coord[1])**2)
         cos = (x4 - planet.real_coord[0]) / distance
         sin = (y4 - planet.real_coord[1]) / distance
-        acceleration = G * planet.mass / distance**2
         ax4 = 0 - G * planet.mass / distance**2 * cos
         ay4 = 0 - G * planet.mass / distance**2 * sin
             
@@ -188,7 +184,7 @@ class Rocket(pg.sprite.Sprite): #класс ракета
         if direction[0] > 0:
            self.angle = math.degrees(math.atan2(-direction[1], direction[0]) )
         if direction[0] < 0:
-           self.angle = math.degrees(math.atan2(-direction[1], direction[0]) - math.pi)   
+           self.angle = math.degrees(-math.atan2(-direction[1], -direction[0]) - math.pi)   
            
     def draw(self, surf, image, topleft, angle):
             rotated_image = pg.transform.rotate(image, angle)
