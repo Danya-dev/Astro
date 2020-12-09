@@ -10,6 +10,12 @@ FPS_menu = 15
 FPS = 100
 dt = FPS*5E+2
 scale_param = 5E+8
+RIGHT = "turn to the right"
+LEFT = "turn to the left"
+UP = "speed up"
+DOWN = "speed down"
+STOP = "not turn"
+
 canvas = pg.Surface(SCREEN_SIZE)
 window = pg.display.set_mode((SCREEN_SIZE))
 """Масштабирование экранных координат по отношению к физическим.
@@ -213,6 +219,25 @@ class Rocket(pg.sprite.Sprite): #класс ракета
                 [c0, c1] = z[0]
                 [v0, v1] = z[1]    
         pg.draw.aalines(screen, (0, 255, 0), False, A, 5)
+        
+    def activate(self, motion, dv):
+        if motion == LEFT:
+            self.velocity[0] -= dv * math.sin(math.radians(self.angle))
+            self.velocity[1] -= dv * math.cos(math.radians(self.angle))
+        elif motion == RIGHT:
+            self.velocity[0] += dv * math.sin(math.radians(self.angle))
+            self.velocity[1] += dv * math.cos(math.radians(self.angle))
+        elif motion == UP:
+            self.velocity[0] += dv * math.cos(math.radians(self.angle))
+            self.velocity[1] -= dv * math.sin(math.radians(self.angle))
+        elif motion == DOWN:
+            if self.velocity[0]**2 + self.velocity[1]**2 <= 10000:
+                pass
+            else:
+                self.velocity[0] -= dv * math.cos(math.radians(self.angle))
+                self.velocity[1] += dv * math.sin(math.radians(self.angle))
+        elif motion == STOP:
+            pass
 
         
 class Planet(): 
@@ -327,6 +352,7 @@ class Level_1(Level):
     def process(self, clock, events):
         #функция обрабатывает полет ракеты    
         done = False
+        motion = STOP
         while not done: #обработка событий
             clock.tick(FPS)
             screen.fill((0,0,0))
@@ -353,6 +379,20 @@ class Level_1(Level):
                                     elif(event.key == pg.K_SPACE) or (event.key == pg.K_ESCAPE):
                                         i = 1  
                                         done = False
+                    elif event.key == pg.K_LEFT:
+                        motion = LEFT
+                    elif event.key == pg.K_RIGHT:
+                        motion = RIGHT
+                    elif event.key == pg.K_UP:
+                        motion = UP
+                    elif event.key == pg.K_DOWN:
+                        motion = DOWN
+                elif event.type == pg.KEYUP:
+                    if event.key in [pg.K_LEFT,
+                                 pg.K_RIGHT]:
+                        motion = STOP
+         
+            self.rocket.activate(motion, 100)
             self.rocket.gravity(self.planets)
             self.rocket.trajectory(self.planets)
             self.movethemall()
