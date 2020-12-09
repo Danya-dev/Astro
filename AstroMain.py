@@ -340,7 +340,7 @@ class Level_1(Level):
                         Level_1(clock, events)
                         done = True
                         return False
-                    elif event.key == pg.K_SPACE:
+                    elif (event.key == pg.K_SPACE) or (event.key == pg.K_ESCAPE):
                         i = 0
                         while i < 1:
                             done = True
@@ -352,7 +352,7 @@ class Level_1(Level):
                                         i = 1
                                         done = False
                                         Level_1(clock, events)
-                                    elif event.key == pg.K_SPACE:
+                                    elif(event.key == pg.K_SPACE) or (event.key == pg.K_ESCAPE):
                                         i = 1  
                                         done = False
             self.rocket.gravity(self.planets)
