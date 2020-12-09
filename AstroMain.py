@@ -208,7 +208,7 @@ class Rocket(pg.sprite.Sprite): #класс ракета
         A = []
         for i in range(200):
             for planet in planets: 
-                A.append((int(c0/scale_param) - self.coord[0] + self.coord0[0], int(c1/scale_param)))
+                A.append((int(c0/scale_param) - self.coord[0] + self.coord0[0], int(c1/scale_param) - self.coord[1] + self.coord0[1]))
                 z = runge_kutta([c0, c1], [v0, v1], planets)
                 [c0, c1] = z[0]
                 [v0, v1] = z[1]    
@@ -221,9 +221,9 @@ class Planet():
         self.real_coord = [x*scale_param, y*scale_param]  # Координаты в пространстве.  
         self.rad = rad
         self.mass = mass
-    def draw(self, x):
+    def draw(self, x, y):
         pg.draw.circle(screen, (255,0,50),
-                       (x + self.coord[0], self.coord[1]), self.rad)
+                       (x + self.coord[0], y + self.coord[1]), self.rad)
     
 class Dust():
     def __init__(self, x, y, w, h):
@@ -231,8 +231,8 @@ class Dust():
         self.a = x
         self.b = y
         self.c = [w, h]
-    def draw(self, x):
-        self.rec1 = pg.Rect((x + self.a, self.b), self.c)
+    def draw(self, x, y):
+        self.rec1 = pg.Rect((x + self.a, y + self.b), self.c)
         pg.draw.rect(screen, (0,255,0), self.rec1)
         
 class Asteroid(pg.sprite.Sprite):
@@ -244,8 +244,8 @@ class Asteroid(pg.sprite.Sprite):
         self.rad = rad
         self.mass = mass        
         self.mask = pg.mask.from_surface(self.image)
-    def draw(self, x):
-        self.rect = self.image.get_rect(center=(x + self.coord[0], self.coord[1]))
+    def draw(self, x, y):
+        self.rect = self.image.get_rect(center=(x + self.coord[0], y + self.coord[1]))
         screen.blit(self.image, self.rect)
         
         
@@ -257,8 +257,8 @@ class Finish(pg.sprite.Sprite):
         self.coord = [x,y]  # Координаты на экране в пикселах.       
         self.rect = self.image.get_rect(center=(self.coord[0], self.coord[1]))
         self.mask = pg.mask.from_surface(self.image)
-    def draw(self, x):
-        self.rect = self.image.get_rect(center=(x + self.coord[0], self.coord[1]))
+    def draw(self, x, y):
+        self.rect = self.image.get_rect(center=(x + self.coord[0], y + self.coord[1]))
         screen.blit(self.image, self.rect)
         
 class Level(): 
@@ -328,9 +328,7 @@ class Level_1(Level):
         #функция обрабатывает полет ракеты    
         done = False
         while not done: #обработка событий
-
             clock.tick(FPS)
-
             screen.fill((0,0,0))
             for event in events.get():
                 if event.type == pg.QUIT:
@@ -367,17 +365,19 @@ class Level_1(Level):
         
     def drawthemall(self):
         x = - self.rocket.coord[0] + self.rocket.coord0[0] # x прибавляется к координатам изображений для создания эффекта движения камеры
+        y = - self.rocket.coord[1] + self.rocket.coord0[1]
         for planet in self.planets:
-            planet.draw(x)
+            planet.draw(x, y)
         for dust in self.dustclouds :
-            dust.draw(x)
+            dust.draw(x, y)
         for asteroid in self.asteroids :
-            asteroid.draw(x)
+            asteroid.draw(x, y)
         corner_cords = [self.rocket.coord0[0] - self.rocket.w/2,
-                        self.rocket.coord[1] - self.rocket.h/2]
+                        self.rocket.coord0[1] - self.rocket.h/2]
         self.rocket.draw(screen, self.rocket.image, corner_cords, self.rocket.angle)
         screen.blit(self.objfinish.image, self.objfinish.rect)
-        self.objfinish.draw(x)
+        self.objfinish.draw(x, y)
+        
     def movethemall(self):
         self.rocket.motion()      
         
