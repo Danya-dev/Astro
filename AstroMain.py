@@ -31,7 +31,6 @@ def runge_kutta(coor, vel, planets):
                          (y - planet.real_coord[1])**2)
         cos = (x - planet.real_coord[0]) / distance
         sin = (y - planet.real_coord[1]) / distance
-        acceleration = G * planet.mass / distance**2
         ax -= G * planet.mass / distance**2 * cos
         ay -= G * planet.mass / distance**2 * sin
             
@@ -47,7 +46,6 @@ def runge_kutta(coor, vel, planets):
                          (y2 - planet.real_coord[1])**2)
         cos = (x2 - planet.real_coord[0]) / distance
         sin = (y2 - planet.real_coord[1]) / distance
-        acceleration = G * planet.mass / distance**2
         ax2 = 0 - G * planet.mass / distance**2 * cos
         ay2 = 0 - G * planet.mass / distance**2 * sin
             
@@ -63,7 +61,6 @@ def runge_kutta(coor, vel, planets):
                          (y3 - planet.real_coord[1])**2)
         cos = (x3 - planet.real_coord[0]) / distance
         sin = (y3 - planet.real_coord[1]) / distance
-        acceleration = G * planet.mass / distance**2
         ax3 = 0 - G * planet.mass / distance**2 * cos
         ay3 = 0 - G * planet.mass / distance**2 * sin
             
@@ -79,7 +76,6 @@ def runge_kutta(coor, vel, planets):
                          (y4 - planet.real_coord[1])**2)
         cos = (x4 - planet.real_coord[0]) / distance
         sin = (y4 - planet.real_coord[1]) / distance
-        acceleration = G * planet.mass / distance**2
         ax4 = 0 - G * planet.mass / distance**2 * cos
         ay4 = 0 - G * planet.mass / distance**2 * sin
             
@@ -188,13 +184,14 @@ class Rocket(pg.sprite.Sprite): #класс ракета
         if direction[0] > 0:
            self.angle = math.degrees(math.atan2(-direction[1], direction[0]) )
         if direction[0] < 0:
-           self.angle = math.degrees(math.atan2(-direction[1], direction[0]) - math.pi)   
+           self.angle = math.degrees(-math.atan2(-direction[1], -direction[0]) - math.pi)   
            
     def draw(self, surf, image, topleft, angle):
             rotated_image = pg.transform.rotate(image, angle)
             new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
             surf.blit(rotated_image, new_rect.topleft)
             pg.draw.rect(surf, (255, 0, 0), new_rect, 2)
+            
     def gravity(self, planets): 
         """ гравитация. принимаем на вход массив планет """
         z = runge_kutta(self.real_coord, self.velocity, planets)
@@ -204,27 +201,16 @@ class Rocket(pg.sprite.Sprite): #класс ракета
     
     def trajectory(self, planets):
         """ траектория по которой будет двигаться ракета, если двигатели не будут работать"""
-        G = 6.67408E-11
-        v0 = self.velocity[0]
-        v1 = self.velocity[1]
-        c0 = self.real_coord[0]
-        c1 = self.real_coord[1]
+        z = runge_kutta(self.real_coord, self.velocity, planets)
+        [c0, c1] = z[0]
+        [v0, v1] = z[1]
         A = []
         for i in range(200):
             for planet in planets: 
-
-                distance = math.sqrt((c0 - planet.real_coord[0])**2 + 
-                                  (c1 - planet.real_coord[1])**2)
-                cos = (c0 - planet.real_coord[0]) / distance
-
-                acceleration = G * planet.mass / distance**2
-                sin = (c1 - planet.real_coord[1]) / distance
-                v0 -= acceleration * cos * dt
-                v1 -= acceleration * sin * dt 
                 A.append((int(c0/scale_param) - self.coord[0] + self.coord0[0], int(c1/scale_param)))
-                c0 += v0 * dt
-                c1 += v1 * dt
-                
+                z = runge_kutta([c0, c1], [v0, v1], planets)
+                [c0, c1] = z[0]
+                [v0, v1] = z[1]    
         pg.draw.aalines(screen, (0, 255, 0), False, A, 5)
 
         
@@ -351,6 +337,7 @@ class Level_1(Level):
 
         
             self.rocket.gravity(self.planets)
+            self.rocket.trajectory(self.planets)
             self.movethemall()
             self.drawthemall()
             if self.oncollision():
@@ -362,7 +349,6 @@ class Level_1(Level):
         
     def drawthemall(self):
         x = - self.rocket.coord[0] + self.rocket.coord0[0] # x прибавляется к координатам изображений для создания эффекта движения камеры
-        self.rocket.trajectory(self.planets)
         for planet in self.planets:
             planet.draw(x)
         for dust in self.dustclouds :
@@ -379,7 +365,7 @@ class Level_1(Level):
         
     def oncollision(self):
         for dust in self.dustclouds:
-            if dust.rec1.collidepoint(self.rocket.coord[0], self.rocket.coord[1]):
+            if dust.rec0.collidepoint(self.rocket.coord[0], self.rocket.coord[1]):
                 return True
         for asteroid in self.asteroids:
             r1 = int(self.rocket.coord[0] - self.rocket.image.get_width()/2)
