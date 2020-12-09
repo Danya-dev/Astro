@@ -87,6 +87,7 @@ def runge_kutta(coor, vel, planets):
     vel[1] += (k1[3] + 2*k2[3] + 2*k3[3] + k4[3])*dt / 6
     return coor, vel
 
+
 def rotation(surface):
     return pg.transform.rotate(surface, 1)
 
@@ -116,7 +117,7 @@ class Menu():
                 for event in events.get():
                     if event.type == pg.QUIT:
                         done = True 
-                    if event.type == pg.MOUSEBUTTONDOWN:
+                    elif event.type == pg.MOUSEBUTTONDOWN:
                         if self.position == 1:  
                             if self.levels.click(event.pos):
                                 self.position = 2
@@ -124,7 +125,7 @@ class Menu():
                                 self.position = 3
                             elif self.info.click(event.pos):
                                 self.position = 4
-                        elif  self.position == 2:   
+                        elif self.position == 2:   
                             if self.back.click(event.pos):
                                 self.position = 1
                             elif self.level_1.click(event.pos):
@@ -265,7 +266,7 @@ class Level():
 
 
 class Level_1(Level):
-    def __init__(self,clock, events):
+    def __init__(self, clock, events):
         gamegoes = True
         while gamegoes:
             self.preparation()
@@ -334,8 +335,26 @@ class Level_1(Level):
             for event in events.get():
                 if event.type == pg.QUIT:
                     done = True
-
-        
+                elif event.type == pg.KEYDOWN: 
+                    if event.key == pg.K_r:
+                        Level_1(clock, events)
+                        done = True
+                        return False
+                    elif event.key == pg.K_SPACE:
+                        i = 0
+                        while i < 1:
+                            done = True
+                            for event in events.get():
+                                if event.type == pg.QUIT:
+                                    i = 1
+                                elif event.type == pg.KEYDOWN:
+                                    if event.key == pg.K_r:
+                                        i = 1
+                                        done = False
+                                        Level_1(clock, events)
+                                    elif event.key == pg.K_SPACE:
+                                        i = 1  
+                                        done = False
             self.rocket.gravity(self.planets)
             self.rocket.trajectory(self.planets)
             self.movethemall()
@@ -344,7 +363,6 @@ class Level_1(Level):
                 return True
             if self.finish():
                 return False
-            
             pg.display.flip()
         
     def drawthemall(self):
