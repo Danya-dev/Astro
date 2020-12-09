@@ -390,11 +390,6 @@ class Level_1(Level):
             if asteroid.mask.overlap_area(self.rocket.mask, offset) > 0:
                 return True
     
-    def dinamic_camera(): 
-            canvas.blit(Rocket.image, (Rocket.coord[0] - Rocket.cam[0], Rocket.coord[1] - Rocket.cam[1]))
-            window.blit(canvas, (0,0))
-            pg.display.update()
-    
     def finish(self):
         r1 = int(self.rocket.coord[0] - self.rocket.image.get_width()/2)
         r2 = int(self.rocket.coord[1] - self.rocket.image.get_height()/2)
