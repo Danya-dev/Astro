@@ -5,7 +5,7 @@ import math
 pg.init()
 pg.font.init()
 
-SCREEN_SIZE = (800, 600)
+SCREEN_SIZE = (1200, 600)
 FPS_menu = 15
 FPS = 100
 dt = FPS*5E+2
@@ -240,15 +240,18 @@ class Rocket(pg.sprite.Sprite): #класс ракета
             pass
 
         
-class Planet(): 
-    def __init__(self, x, y, rad, mass):
+class Planet(pg.sprite.Sprite): 
+    def __init__(self, filename, x, y, rad, mass):
+        pg.sprite.Sprite.__init__(self)
+        self.image = pg.image.load(filename).convert_alpha()
         self.coord = [x,y]  # Координаты на экране в пикселах.
         self.real_coord = [x*scale_param, y*scale_param]  # Координаты в пространстве.  
         self.rad = rad
         self.mass = mass
+        self.mask = pg.mask.from_surface(self.image)
     def draw(self, x, y):
-        pg.draw.circle(screen, (255,0,50),
-                       (x + self.coord[0], y + self.coord[1]), self.rad)
+        self.rect = self.image.get_rect(center=(x + self.coord[0], y + self.coord[1]))
+        screen.blit(self.image, self.rect)
     
 class Dust():
     def __init__(self, x, y, w, h):
@@ -306,8 +309,8 @@ class Level_1(Level):
         self.planets = []
         self.dustclouds = []
         self.asteroids = []
-        self.objfinish = Finish("Earth.png",500, 300)
-        self.planets.append(Planet(400, 300, 40, 8E+28))
+        self.objfinish = Finish("Earth.png",1000, 300)
+        self.planets.append(Planet("Planet2.png", 500, 300, 40, 8E+28))
         self.width = 30
         self.asteroids.append(Asteroid("Asteroid.png", 200, 200, 40, 10))
         self.dustclouds.append(Dust(0, 0, SCREEN_SIZE[0] , self.width))
@@ -432,6 +435,14 @@ class Level_1(Level):
             a2 = int(asteroid.coord[1] - asteroid.image.get_height()/2)
             offset = (r1 - a1, r2 - a2)
             if asteroid.mask.overlap_area(self.rocket.mask, offset) > 0:
+                return True
+        for planet in self.planets:
+            r1 = int(self.rocket.coord[0] - self.rocket.image.get_width()/2)
+            r2 = int(self.rocket.coord[1] - self.rocket.image.get_height()/2)
+            a1 = int(planet.coord[0] - asteroid.image.get_width()/2)
+            a2 = int(planet.coord[1] - asteroid.image.get_height()/2)
+            offset = (r1 - a1, r2 - a2)
+            if planet.mask.overlap_area(self.rocket.mask, offset) > 0:
                 return True
     
     def finish(self):
