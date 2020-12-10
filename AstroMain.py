@@ -138,6 +138,18 @@ class Menu():
             # 4 - об игре, 5 - переход к уровню
             self.level_1 = botton.Botton(self.screen, [100, 50], 120, 40,
                                          (255, 0, 0), "Уровень 1")
+            self.level_2 = botton.Botton(self.screen, [100, 100], 120, 40,
+                                         (255, 0, 0), "Уровень 2")
+            self.level_3 = botton.Botton(self.screen, [100, 150], 120, 40,
+                                         (255, 0, 0), "Уровень 3")
+            info_text1 = "Производство Даниила Бородина совместно c"
+            info_text2 = "Разиным Александром и Киракосьянцем Филиппом"
+            self.info_contain1 = botton.Botton(self.screen, [275, 400], 480, 40,
+                                         (240, 0, 120), info_text1)
+            self.info_contain2 = botton.Botton(self.screen, [275, 440], 480, 40,
+                                         (240, 0, 120), info_text2)
+            self.sett = botton.Botton(self.screen, [160, 150], 240, 40,
+                                         (255, 0, 0), "Всё уже настроено!")
         
         
         def menufunc(self, clock, events): # Функция меню. 
@@ -160,6 +172,10 @@ class Menu():
                                 self.position = 1
                             elif self.level_1.click(event.pos):
                                 return Level_1(clock, events)
+                            elif self.level_2.click(event.pos):
+                                return Level_2(clock, events)
+                            elif self.level_3.click(event.pos):
+                                return Level_3(clock, events)
                         else:   
                             if self.back.click(event.pos):
                                 self.position = 1   
@@ -176,10 +192,15 @@ class Menu():
                 self.info.draw()
             if self.position == 2:
                 self.level_1.draw()
+                self.level_2.draw()
+                self.level_3.draw()
                 self.back.draw()
             if self.position == 3:
+                self.sett.draw()
                 self.back.draw()
             if self.position == 4:
+                self.info_contain1.draw()
+                self.info_contain2.draw()
                 self.back.draw()
     
         
@@ -192,7 +213,7 @@ class Menu():
             
             
         def info(self):
-            pass            
+            pass
           
           
 class Rocket(pg.sprite.Sprite):
@@ -260,7 +281,7 @@ class Rocket(pg.sprite.Sprite):
                 a1 = int(planet.coord[0] - planet.image.get_width()/2)
                 a2 = int(planet.coord[1] - planet.image.get_height()/2)
                 offset = (r1 - a1, r2 - a2)
-                if planet.mask.overlap_area(self.mask, offset) > 0:
+                if planet.mask.overlap_area(self.mask, offset) > 0 and i > 0:
                     done = True
             i += 1
         pg.draw.aalines(screen, (200, 0, 150), False, A, 5)
@@ -345,13 +366,17 @@ class Finish(pg.sprite.Sprite):
     def draw(self, x, y):
         self.rect = self.image.get_rect(center=(x + self.coord[0], y + self.coord[1]))
         screen.blit(self.image, self.rect)
-        
-class Level(): 
-    pass
 
 
-class Level_1(Level):
+class Level():
     def __init__(self, clock, events):
+        self.rocket = Rocket("Rocket.png")
+        self.planets = []
+        self.dustclouds = []
+        self.asteroids = []
+        self.dv = 20
+        self.width = 30
+        self.lenth_start_traject = 150
         gamegoes = True
         while gamegoes:
             self.preparation()
@@ -369,7 +394,6 @@ class Level_1(Level):
         self.objfinish = Finish("Earth.png",550, 300)
         self.planets.append(Planet("Planet2.png", 300, 300, 40, 8E+28))
         self.width = 30
-        self.asteroids.append(Asteroid("Asteroid1.png", 100, 200, 40, 10))
                 
       
     def start(self, clock, events):
@@ -403,7 +427,7 @@ class Level_1(Level):
                     self.rocket.velocity[1] = force * rocdirect[1]                
             
             if trajectory:
-                self.rocket.trajectory(self.planets, 200)                 
+                self.rocket.trajectory(self.planets, self.lenth_start_traject)                 
             self.drawthemall()
             pg.display.flip()
         
@@ -451,7 +475,7 @@ class Level_1(Level):
                                  pg.K_RIGHT]:
                         motion = STOP
          
-            self.rocket.activate(motion, 100)
+            self.rocket.activate(motion, self.dv)
             self.rocket.gravity(self.planets)
             self.rocket.trajectory(self.planets, 150)
             self.movethemall()
@@ -515,6 +539,60 @@ class Level_1(Level):
         offset = (r1 - a1, r2 - a2)
         if self.objfinish.mask.overlap_area(self.rocket.mask, offset) > 0:
             return True
+        
+class Level_1(Level): 
+    def __init__(self, clock, events):
+        super().__init__(clock, events)
+        
+    
+    def preparation(self):
+        """Функция готовит объекты игрового поля."""
+        self.rocket = Rocket("Rocket.png")
+        self.planets = []
+        self.dustclouds = []
+        self.asteroids = []
+        self.objfinish = Finish("Earth.png",550, 300)
+        self.planets.append(Planet("Planet2.png", 300, 300, 40, 8E+28))
+        self.asteroids.append(Asteroid("Asteroid1.png", 100, 200, 40, 10))
+        
+class Level_2(Level): 
+    def __init__(self, clock, events):
+        super().__init__(clock, events)
+        
+        
+    def preparation(self):
+        """Функция готовит объекты игрового поля."""
+        self.rocket = Rocket("Rocket.png")
+        self.planets = []
+        self.dustclouds = []
+        self.asteroids = []
+        self.dv = 10
+        self.objfinish = Finish("Earth.png",550, 300)
+        self.planets.append(Planet("Planet2.png", 300, 300, 40, 8E+28))
+        self.asteroids.append(Asteroid("Asteroid1.png", 100, 200, 40, 10))
+        self.asteroids.append(Asteroid("Asteroid1.png", 500, 200, 40, 10))
+        self.asteroids.append(Asteroid("Asteroid2.png", 400, 400, 40, 10))
+        
+class Level_3(Level): 
+    def __init__(self, clock, events):
+        super().__init__(clock, events)
+        
+        
+    def preparation(self):
+        """Функция готовит объекты игрового поля."""
+        self.rocket = Rocket("Rocket.png")
+        self.planets = []
+        self.dustclouds = []
+        self.asteroids = []
+        self.dv = 5
+        self.lenth_start_traject = 350        
+        self.objfinish = Finish("Earth.png",550, 400)
+        self.planets.append(Planet("Planet2.png", 300, 300, 40, 16E+28))
+        self.asteroids.append(Asteroid("Asteroid1.png", 100, 200, 40, 10))
+        self.asteroids.append(Asteroid("Asteroid1.png", 500, 200, 40, 10))
+        self.asteroids.append(Asteroid("Asteroid2.png", 400, 400, 40, 10))
+        self.asteroids.append(Asteroid("Asteroids.png", 150, 450, 40, 10))
+        self.planets.append(Planet("Planet1.png", 500, 100, 40, 8E+28))
                                     
     
     
