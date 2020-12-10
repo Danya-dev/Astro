@@ -369,7 +369,7 @@ class Level_1(Level):
         self.objfinish = Finish("Earth.png",550, 300)
         self.planets.append(Planet("Planet2.png", 300, 300, 40, 8E+28))
         self.width = 30
-        self.asteroids.append(Asteroid("Asteroids.png", 100, 200, 40, 10))
+        self.asteroids.append(Asteroid("Asteroid1.png", 100, 200, 40, 10))
                 
       
     def start(self, clock, events):
@@ -403,7 +403,7 @@ class Level_1(Level):
                     self.rocket.velocity[1] = force * rocdirect[1]                
             
             if trajectory:
-                self.rocket.trajectory(self.planets, 1000)                 
+                self.rocket.trajectory(self.planets, 200)                 
             self.drawthemall()
             pg.display.flip()
         
@@ -453,7 +453,7 @@ class Level_1(Level):
          
             self.rocket.activate(motion, 100)
             self.rocket.gravity(self.planets)
-            self.rocket.trajectory(self.planets, 100)
+            self.rocket.trajectory(self.planets, 150)
             self.movethemall()
             self.drawthemall()
             if self.oncollision():
