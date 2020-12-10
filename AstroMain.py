@@ -206,13 +206,12 @@ class Rocket(pg.sprite.Sprite): #класс ракета
         self.velocity = z[1]
 
     
-    def trajectory(self, planets):
+    def trajectory(self, planets, n):
         """ траектория по которой будет двигаться ракета, если двигатели не будут работать"""
-        z = runge_kutta(self.real_coord, self.velocity, planets)
-        [c0, c1] = z[0]
-        [v0, v1] = z[1]
+        [c0, c1] = self.real_coord
+        [v0, v1] = self.velocity
         A = []
-        for i in range(200):
+        for i in range(n):
             for planet in planets: 
                 A.append((int(c0/scale_param) - self.coord[0] + self.coord0[0], int(c1/scale_param) - self.coord[1] + self.coord0[1]))
                 z = runge_kutta([c0, c1], [v0, v1], planets)
@@ -313,41 +312,39 @@ class Level_1(Level):
         self.planets.append(Planet("Planet2.png", 500, 300, 40, 8E+28))
         self.width = 30
         self.asteroids.append(Asteroid("Asteroid.png", 200, 200, 40, 10))
-        self.dustclouds.append(Dust(0, 0, SCREEN_SIZE[0] , self.width))
-        self.dustclouds.append(Dust(0, 0, self.width, SCREEN_SIZE[1]))
-        self.dustclouds.append(Dust(0, SCREEN_SIZE[1] - self.width,SCREEN_SIZE[0], self.width ))
-        #self.dustclouds.append(Dust(SCREEN_SIZE[0] - self.width,0, self.width, SCREEN_SIZE[1]))
                 
      #функция обрабатывает запуск ракеты  
     def start(self, clock, events):            
         done = False
         launchbool = False
-        force = 6
+        force = 50
         rocdirect = [1,0]
+        mouse_coord = self.rocket.coord
+        trajectory = False
         while not done: #обработка событий
             clock.tick(30 )
-            screen.fill((0,0,0))            
+            screen.fill((0,0,0)) 
             for event in events.get():
                 if event.type == pg.QUIT:
                     done = True
                 elif event.type == pg.MOUSEBUTTONDOWN :
                     if event.button == 1:                
-                        launchbool = True    
-                elif launchbool and event.type == pg.MOUSEMOTION:
-                    rocdirect = [self.rocket.coord[0] - event.pos[0],
-                                 self.rocket.coord[1] - event.pos[1] ]
-                    self.rocket.findangle(rocdirect)   
+                        launchbool = True  
+                        trajectory = True
                 elif launchbool and event.type == pg.MOUSEBUTTONUP:
                     if event.button == 1 :
-                        
-                        pg.draw.circle(screen,(233,100,8),(100,100),50 )
-                        mod = math.sqrt(rocdirect[0]**2 + rocdirect[1]**2)                       
-                        self.rocket.velocity = [round(math.exp(force) * rocdirect[0] / mod),
-                                                round(math.exp(force) * rocdirect[1] / mod)]
-                        return None
-                if launchbool :
-                    force += 0.2 
-                        
+                        done = True
+                elif launchbool:
+                    if event.type == pg.MOUSEMOTION:
+                        mouse_coord = event.pos
+                    rocdirect = [-self.rocket.coord[0] + mouse_coord[0],
+                                 -self.rocket.coord[1] + mouse_coord[1] ]
+                    self.rocket.findangle(rocdirect)
+                    self.rocket.velocity[0] = force * rocdirect[0]
+                    self.rocket.velocity[1] = force * rocdirect[1]                
+            
+            if trajectory:
+                self.rocket.trajectory(self.planets, 1000)                 
             self.drawthemall()
             pg.display.flip()
         
@@ -397,7 +394,7 @@ class Level_1(Level):
          
             self.rocket.activate(motion, 100)
             self.rocket.gravity(self.planets)
-            self.rocket.trajectory(self.planets)
+            self.rocket.trajectory(self.planets, 100)
             self.movethemall()
             self.drawthemall()
             if self.oncollision():
@@ -439,8 +436,8 @@ class Level_1(Level):
         for planet in self.planets:
             r1 = int(self.rocket.coord[0] - self.rocket.image.get_width()/2)
             r2 = int(self.rocket.coord[1] - self.rocket.image.get_height()/2)
-            a1 = int(planet.coord[0] - asteroid.image.get_width()/2)
-            a2 = int(planet.coord[1] - asteroid.image.get_height()/2)
+            a1 = int(planet.coord[0] - planet.image.get_width()/2)
+            a2 = int(planet.coord[1] - planet.image.get_height()/2)
             offset = (r1 - a1, r2 - a2)
             if planet.mask.overlap_area(self.rocket.mask, offset) > 0:
                 return True
