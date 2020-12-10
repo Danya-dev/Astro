@@ -246,13 +246,23 @@ class Rocket(pg.sprite.Sprite):
         [c0, c1] = self.real_coord
         [v0, v1] = self.velocity
         A = []
-        for i in range(n):
-            for planet in planets: 
-                A.append((int(c0/scale_param) - self.coord[0] + self.coord0[0],
-                          int(c1/scale_param) - self.coord[1] + self.coord0[1]))
-                z = runge_kutta([c0, c1], [v0, v1], planets)
-                [c0, c1] = z[0]
-                [v0, v1] = z[1]    
+        done = False
+        i = 0
+        while i < n and not done:
+            A.append((int(c0/scale_param) - self.coord[0] + self.coord0[0],
+                      int(c1/scale_param) - self.coord[1] + self.coord0[1]))
+            z = runge_kutta([c0, c1], [v0, v1], planets)
+            [c0, c1] = z[0]
+            [v0, v1] = z[1]
+            for planet in planets:     
+                r1 = int((int(c0/scale_param)) - self.image.get_width()/2)
+                r2 = int((int(c1/scale_param)) - self.image.get_height()/2)
+                a1 = int(planet.coord[0] - planet.image.get_width()/2)
+                a2 = int(planet.coord[1] - planet.image.get_height()/2)
+                offset = (r1 - a1, r2 - a2)
+                if planet.mask.overlap_area(self.mask, offset) > 0:
+                    done = True
+            i += 1
         pg.draw.aalines(screen, (200, 0, 150), False, A, 5)
         
    
@@ -359,7 +369,7 @@ class Level_1(Level):
         self.objfinish = Finish("Earth.png",550, 300)
         self.planets.append(Planet("Planet2.png", 300, 300, 40, 8E+28))
         self.width = 30
-        self.asteroids.append(Asteroid("Asteroid.png", 100, 200, 40, 10))
+        self.asteroids.append(Asteroid("Asteroids.png", 100, 200, 40, 10))
                 
       
     def start(self, clock, events):
