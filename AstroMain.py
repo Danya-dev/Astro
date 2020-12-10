@@ -5,7 +5,7 @@ import math
 pg.init()
 pg.font.init()
 
-SCREEN_SIZE = (1200, 600)
+SCREEN_SIZE = (800, 600)#я рисовал под этот размер + слишком длинная карта выглядит не оч
 FPS_menu = 15
 FPS = 100
 dt = FPS*5E+2
@@ -18,6 +18,8 @@ STOP = "not turn"
 
 canvas = pg.Surface(SCREEN_SIZE)
 window = pg.display.set_mode((SCREEN_SIZE))
+space = pg.image.load("space5.png").convert_alpha()
+screenpos = (0, 0)
 """Масштабирование экранных координат по отношению к физическим.
 Тип: float
 Мера: количество пикселей на один метр."""
@@ -144,7 +146,7 @@ class Menu():
                 self.draw()
         
         def draw(self):
-            screen.fill((0, 0, 0))
+            screen.blit(space, screenpos)
             if self.position == 1:
                 self.levels.draw()
                 self.settings.draw()
@@ -197,7 +199,7 @@ class Rocket(pg.sprite.Sprite): #класс ракета
             rotated_image = pg.transform.rotate(image, angle)
             new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
             surf.blit(rotated_image, new_rect.topleft)
-            pg.draw.rect(surf, (255, 0, 0), new_rect, 2)
+            # pg.draw.rect(surf, (255, 0, 0), new_rect, 2)
             
     def gravity(self, planets): 
         """ гравитация. принимаем на вход массив планет """
@@ -217,7 +219,7 @@ class Rocket(pg.sprite.Sprite): #класс ракета
                 z = runge_kutta([c0, c1], [v0, v1], planets)
                 [c0, c1] = z[0]
                 [v0, v1] = z[1]    
-        pg.draw.aalines(screen, (0, 255, 0), False, A, 5)
+        pg.draw.aalines(screen, (200, 0, 150), False, A, 5)
         
     def activate(self, motion, dv):
         if motion == LEFT:
@@ -323,7 +325,7 @@ class Level_1(Level):
         trajectory = False
         while not done: #обработка событий
             clock.tick(30 )
-            screen.fill((0,0,0)) 
+            screen.blit(space, screenpos)            
             for event in events.get():
                 if event.type == pg.QUIT:
                     done = True
@@ -355,7 +357,7 @@ class Level_1(Level):
         motion = STOP
         while not done: #обработка событий
             clock.tick(FPS)
-            screen.fill((0,0,0))
+            screen.blit(space, screenpos)
             for event in events.get():
                 if event.type == pg.QUIT:
                     done = True
