@@ -19,11 +19,13 @@ UP = "speed up"
 DOWN = "speed down"
 STOP = "not turn"
 
+
+DIRECTION = ''
 canvas = pg.Surface(SCREEN_SIZE)
 window = pg.display.set_mode((SCREEN_SIZE))
-space = pg.image.load("space5.png").convert_alpha()
+space = pg.image.load(DIRECTION + "space5.png").convert_alpha()
 screenpos = (0, 0)
-    
+  
   
 def runge_kutta(coor, vel, planets):
     """
@@ -220,7 +222,7 @@ class Rocket(pg.sprite.Sprite):
     """Класс ракеты."""
     def __init__(self, filename):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.image.load(filename).convert_alpha()
+        self.image = pg.image.load(DIRECTION + filename).convert_alpha()
         self.w , self.h = self.image.get_size()
         self.coord0 = [100, 300]
         self.coord = [100, 300] # Координаты на экране в пикселах.
@@ -230,7 +232,9 @@ class Rocket(pg.sprite.Sprite):
         self.angle = 0
         self.velocity = [0,0]
         self.cam = [0, 0]
-        
+        self.upfire = pg.image.load(DIRECTION + "upfire1.png").convert_alpha()
+        self.downfire = pg.image.load(DIRECTION + "downfire1.png").convert_alpha()
+        self.fullfire = pg.image.load(DIRECTION + "fullfire1.png").convert_alpha()
     
     def motion(self):
         """Функция движения ракеты."""
@@ -248,10 +252,11 @@ class Rocket(pg.sprite.Sprite):
            
    
     def draw(self, surf, image, topleft, angle):
+            image.blit(self.upfire, topleft)
             rotated_image = pg.transform.rotate(image, angle)
             new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
             surf.blit(rotated_image, new_rect.topleft)
-            # pg.draw.rect(surf, (255, 0, 0), new_rect, 2)
+            #pg.draw.rect(surf, (255, 0, 0), new_rect, 2)
             
     
     def gravity(self, planets): 
@@ -291,26 +296,33 @@ class Rocket(pg.sprite.Sprite):
         if motion == LEFT:
             self.velocity[0] -= dv * math.sin(math.radians(self.angle))
             self.velocity[1] -= dv * math.cos(math.radians(self.angle))
+            return self.downfire
         elif motion == RIGHT:
             self.velocity[0] += dv * math.sin(math.radians(self.angle))
             self.velocity[1] += dv * math.cos(math.radians(self.angle))
+            return self.upfire
+            
         elif motion == UP:
             self.velocity[0] += dv * math.cos(math.radians(self.angle))
             self.velocity[1] -= dv * math.sin(math.radians(self.angle))
+            return self.fullfire
+            
         elif motion == DOWN:
             if self.velocity[0]**2 + self.velocity[1]**2 <= 10000:
-                pass
+                return self.image
+               
             else:
                 self.velocity[0] -= dv * math.cos(math.radians(self.angle))
                 self.velocity[1] += dv * math.sin(math.radians(self.angle))
+                return self.image             
         elif motion == STOP:
-            pass
+            return self.image
 
         
 class Planet(pg.sprite.Sprite): 
     def __init__(self, filename, x, y, rad, mass):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.image.load(filename).convert_alpha()
+        self.image = pg.image.load(DIRECTION + filename).convert_alpha()
         self.coord = [x,y]  # Координаты на экране в пикселах.
         self.real_coord = [x*scale_param, y*scale_param]  # Координаты в пространстве.  
         self.rad = rad
@@ -340,7 +352,7 @@ class Asteroid(pg.sprite.Sprite):
     
     def __init__(self, filename, x, y, rad, mass):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.image.load(filename).convert_alpha()
+        self.image = pg.image.load(DIRECTION + filename).convert_alpha()
         self.coord = [x,y]  # Координаты на экране в пикселах.
         self.real_coord = [x*scale_param, y*scale_param]  # Координаты в пространстве.  
         self.rad = rad
@@ -357,7 +369,7 @@ class Asteroid(pg.sprite.Sprite):
 class Finish(pg.sprite.Sprite):
     def __init__(self, filename, x, y):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.image.load(filename).convert_alpha()
+        self.image = pg.image.load(DIRECTION + filename).convert_alpha()
         self.coord = [x,y]  # Координаты на экране в пикселах.       
         self.rect = self.image.get_rect(center=(self.coord[0], self.coord[1]))
         self.mask = pg.mask.from_surface(self.image)
@@ -428,7 +440,7 @@ class Level():
             
             if trajectory:
                 self.rocket.trajectory(self.planets, self.lenth_start_traject)                 
-            self.drawthemall()
+            self.drawthemall(self.rocket.image)
             pg.display.flip()
         
           
@@ -475,11 +487,11 @@ class Level():
                                  pg.K_RIGHT]:
                         motion = STOP
          
-            self.rocket.activate(motion, self.dv)
+            image = self.rocket.activate(motion, self.dv)
             self.rocket.gravity(self.planets)
             self.rocket.trajectory(self.planets, 150)
             self.movethemall()
-            self.drawthemall()
+            self.drawthemall(image)
             if self.oncollision():
                 return True
             if self.finish():
@@ -487,7 +499,7 @@ class Level():
             pg.display.flip()
        
         
-    def drawthemall(self):
+    def drawthemall(self, image):
         x = - self.rocket.coord[0] + self.rocket.coord0[0] 
         """x прибавляется к координатам изображений
         для создания эффекта движения камеры"""
@@ -500,7 +512,7 @@ class Level():
             asteroid.draw(x, y)
         corner_cords = [self.rocket.coord0[0] - self.rocket.w/2,
                         self.rocket.coord0[1] - self.rocket.h/2]
-        self.rocket.draw(screen, self.rocket.image, corner_cords, self.rocket.angle)
+        self.rocket.draw(screen, image, corner_cords, self.rocket.angle)
         screen.blit(self.objfinish.image, self.objfinish.rect)
         self.objfinish.draw(x, y)
       
