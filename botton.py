@@ -39,7 +39,7 @@ class Botton():
         
         
 class Botton_image():
-    '''Класс кнопки.'''
+    '''Класс кнопки. Использует изображение для отображения кнопки.'''
     def __init__(self, screen, coords, filename, botton_form):
         self.screen = screen
         self.coords = coords
