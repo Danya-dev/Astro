@@ -7,8 +7,8 @@ pg.font.init()
 
 SCREEN_SIZE = (800, 600)
 FPS_menu = 15
-FPS = 100
-dt = FPS*5E+2
+FPS = 400
+dt = 100*5E+2
 scale_param = 5E+8
 """Масштабирование экранных координат по отношению к физическим.
 Тип: float
@@ -125,31 +125,23 @@ class Menu():
         '''Класс меню. Реализует отрисовку меню и функции меню.'''
         def __init__(self, screen):
             self.screen = screen
-            self.levels = botton.Botton(self.screen, [100, 50], 120, 40,
-                                        (255, 0, 0), "Уровни")
-            self.settings = botton.Botton(self.screen, [100, 100], 120, 40,
-                                          (255, 0, 0), "Настройки")
-            self.info = botton.Botton(self.screen, [100, 150], 120, 40,
-                                      (255, 0, 0), "Об игре")
-            self.back = botton.Botton(self.screen, [100, 500], 120, 40,
-                                      (255, 0, 0), "Назад")
+            self.levels = botton.Botton_image(self.screen, [90 , 513],
+                                              "play.png", "circle")
+            self.settings = botton.Botton_image(self.screen, [184 , 540],
+                                                "settings.png", "circle")
+            self.back = botton.Botton(self.screen, [100, 100], 120, 40,
+                                      (0, 0, 0), "Назад")
             self.position = 1  
             # Позиция меню. 1 - главное, 2 - уровни, 3 - настройки,
-            # 4 - об игре, 5 - переход к уровню
-            self.level_1 = botton.Botton(self.screen, [100, 50], 120, 40,
-                                         (255, 0, 0), "Уровень 1")
-            self.level_2 = botton.Botton(self.screen, [100, 100], 120, 40,
-                                         (255, 0, 0), "Уровень 2")
-            self.level_3 = botton.Botton(self.screen, [100, 150], 120, 40,
-                                         (255, 0, 0), "Уровень 3")
-            info_text1 = "Производство Даниила Бородина совместно c"
-            info_text2 = "Разиным Александром и Киракосьянцем Филиппом"
-            self.info_contain1 = botton.Botton(self.screen, [275, 400], 480, 40,
-                                         (240, 0, 120), info_text1)
-            self.info_contain2 = botton.Botton(self.screen, [275, 440], 480, 40,
-                                         (240, 0, 120), info_text2)
+            # 4 - переход к уровню
+            self.level_1 = botton.Botton_image(self.screen, [61, 487],
+                                                "level_1.png", "rect")
+            self.level_2 = botton.Botton_image(self.screen, [117 , 495],
+                                                "level_2.png", "rect")
+            self.level_3 = botton.Botton_image(self.screen, [173 , 496],
+                                                "level_3.png", "rect")
             self.sett = botton.Botton(self.screen, [160, 150], 240, 40,
-                                         (255, 0, 0), "Всё уже настроено!")
+                                         (0, 0, 0), "Всё уже настроено!")
         
         
         def menufunc(self, clock, events): # Функция меню. 
@@ -165,8 +157,6 @@ class Menu():
                                 self.position = 2
                             elif self.settings.click(event.pos):
                                 self.position = 3
-                            elif self.info.click(event.pos):
-                                self.position = 4
                         elif self.position == 2:   
                             if self.back.click(event.pos):
                                 self.position = 1
@@ -189,7 +179,6 @@ class Menu():
             if self.position == 1:
                 self.levels.draw()
                 self.settings.draw()
-                self.info.draw()
             if self.position == 2:
                 self.level_1.draw()
                 self.level_2.draw()
@@ -197,10 +186,6 @@ class Menu():
                 self.back.draw()
             if self.position == 3:
                 self.sett.draw()
-                self.back.draw()
-            if self.position == 4:
-                self.info_contain1.draw()
-                self.info_contain2.draw()
                 self.back.draw()
     
         
