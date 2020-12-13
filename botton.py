@@ -36,4 +36,37 @@ class Botton():
                     return True
         else:
             return False
+        
+        
+class Botton_image():
+    '''Класс кнопки. Использует изображение для отображения кнопки.'''
+    def __init__(self, screen, coords, filename, botton_form):
+        self.screen = screen
+        self.coords = coords
+        self.image = pg.image.load(filename).convert_alpha()
+        self.rad = self.image.get_width()/2
+        self.width = self.image.get_width()
+        self.height = self.image.get_height()
+        self.botton_form = botton_form
+        
+    def draw(self):
+        self.rect = self.image.get_rect(center=(self.coords[0], self.coords[1]))
+        self.screen.blit(self.image, self.rect)
+        
+    
+    def click(self, mouse_coord):
+        if self.botton_form == "circle":    
+            if (mouse_coord[0] - self.coords[0])**2 + (mouse_coord[1] - self.coords[1])**2 <= self.rad**2:
+                        return True
+            else:
+                return False
+        if self.botton_form == "rect":  
+            if (mouse_coord[0] >= self.coords[0] - self.width / 2) & (
+                mouse_coord[0] <= self.coords[0] + self.width / 2) & (
+                mouse_coord[1] >= self.coords[1] - self.height / 2) & (
+                mouse_coord[1] <= self.coords[1] + self.height / 2):
+                        return True
+            else:
+                return False        
+    
     
