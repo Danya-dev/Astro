@@ -9,9 +9,11 @@ SCREEN_SIZE = (800, 600)
 FPS_menu = 15
 FPS = 400
 dt = 100*5E+2
+
 """Шаг реального времени при одной иттерации цикла обработки событий игры.
 Тип: float
 Мера: секунды."""
+
 scale_param = 5E+8
 """Масштабирование экранных координат по отношению к физическим.
 Тип: float
@@ -136,11 +138,13 @@ class Menu():
         def __init__(self, screen):
             self.screen = screen
             self.levels = botton.Botton_image(self.screen, [90 , 513],
+
                                               DIRECTION + "play.png", "circle")
             self.settings = botton.Botton_image(self.screen, [184 , 540],
                                                 DIRECTION + "settings.png", "circle")
             # self.back = botton.Botton(self.screen, [100, 100], 120, 40,
             #                           (0, 0, 0), "Назад")
+
             self.position = 1  
             # Позиция меню. 1 - главное, 2 - уровни, 3 - настройки,
             # 4 - переход к уровню
