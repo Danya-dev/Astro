@@ -179,7 +179,7 @@ class Menu():
                         if self.position == 2 and event.key == pg.K_p:
                             return DeveloperMode()
                             
-                            
+                                 
                             
                         
             
@@ -217,6 +217,7 @@ class DeveloperMode():
             self.image = image
             self.name = name
             self.objtype = objtype
+            self.w, self.h = self.image.get_size()
     def __init__(self):
         self.planet1 = self.GameObject(pg.image.load(DIRECTION + "Planet1.png").convert_alpha(),
                                       'Planet1', 'planet')
@@ -230,6 +231,7 @@ class DeveloperMode():
                                          'Asteroid2', 'asteroid')
         self.rocket = self.GameObject(pg.image.load(DIRECTION + "Rocket.png").convert_alpha(),
                                       'rocket', 'rocket')
+        self.delete = self.GameObject(pg.image.load(DIRECTION + "Rocket.png"), 'Delete', 'Delete')
         self.planetcash = []
         self.rfcash = [(100, 300), (400,300)]
         self.asteroidscash = []
@@ -248,9 +250,13 @@ class DeveloperMode():
                 elif event.type == pg.MOUSEBUTTONDOWN :  
                     if event.button == 1:                    
                         if gmobject.name == workname:
-                            self.cashing(gmobject, event.pos)
-                        
-                    
+                            if workname == 'Delete':
+                                self.deleteobj(event)
+                            else:   
+                                pos = [0, 0]
+                                pos[0] = int( event.pos[0] - gmobject.w / 2)
+                                pos[1] = int(event.pos[1] - gmobject.h / 2)                               
+                                self.cashing(gmobject, pos)
                 elif event.type == pg.KEYDOWN:
                     if event.key == pg.K_RETURN:
                         self.constructor()
@@ -287,6 +293,10 @@ class DeveloperMode():
                             gmobject = self.asteroid2
                             workname = self.asteroid2.name
                             print(gmobject.name)
+                    elif event.key == pg.K_BACKSPACE:
+                        gmobject = self.delete
+                        workname = self.delete.name
+                        print(gmobject.name)
 
                     
                             
@@ -294,16 +304,28 @@ class DeveloperMode():
             pg.display.flip()
             
             
-            
+    def deleteobj(self, event):
+        for gmobject in self.planetcash:
+            x, y = gmobject[1]
+            if (x < event.pos[0] < x + gmobject[2]) and (y < event.pos[1] < y + gmobject[3]):
+                self.planetcash.remove(gmobject)
+        for gmobject in self.asteroidscash:
+            x, y = gmobject[1]
+            if (x < event.pos[0] < x + gmobject[2]) and (y < event.pos[1] < y + gmobject[3]):
+                self.asteroidscash.remove(gmobject)
+                    
+        
     def cashing(self, gmobject, pos):
         if gmobject.objtype == 'planet':
-            self.planetcash.append([gmobject.name, pos ])
+            self.planetcash.append([gmobject.name, pos, gmobject.w, gmobject.h ])
         elif gmobject.objtype == 'finish':
             self.rfcash[1] = pos
         elif gmobject.objtype == 'rocket':
             self.rfcash[0] = pos
         elif gmobject.objtype == 'asteroid':
-            self.asteroidscash.append([gmobject.name, pos])
+            self.asteroidscash.append([gmobject.name, pos, gmobject.w, gmobject.h])
+            
+            
     def draw(self):
         for planet in self.planetcash:
             screen.blit(pg.image.load(DIRECTION + planet[0] + '.png'), planet[1])
