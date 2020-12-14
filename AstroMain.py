@@ -374,11 +374,11 @@ class Level():
         self.dv = 20
         self.width = 30
         self.lenth_start_traject = 150
-        self.preparation()
-        self.start(clock, events)
         gamegoes = True
         pg.mouse.set_visible(False)
         while gamegoes:
+            self.preparation()
+            self.start(clock, events)
             gamegoes = self.process(clock, events)
         pg.mouse.set_visible(True)
         menu.menufunc(clock, events)       
@@ -653,4 +653,3 @@ menu = Menu(screen)
 menu.menufunc(clock, pg.event)
 
 pg.quit()
-
