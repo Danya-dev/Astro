@@ -9,6 +9,9 @@ SCREEN_SIZE = (800, 600)
 FPS_menu = 15
 FPS = 400
 dt = 100*5E+2
+"""Шаг реального времени при одной иттерации цикла обработки событий игры.
+Тип: float
+Мера: секунды."""
 scale_param = 5E+8
 """Масштабирование экранных координат по отношению к физическим.
 Тип: float
@@ -152,9 +155,10 @@ class Menu():
             self.menufunc(clock, pg.event)
         
         
-        def menufunc(self, clock, events): # Функция меню. 
+        def menufunc(self, clock, events):
+            """Функция, обрабатывающая события в режиме открытого меню."""
             done = False
-            while not done: # Обработка событий.
+            while not done:
                 clock.tick(FPS_menu)
                 for event in events.get():
                     if event.type == pg.QUIT:
@@ -178,11 +182,7 @@ class Menu():
                     elif event.type == pg.KEYDOWN:
                         if self.position == 2 and event.key == pg.K_p:
                             return DeveloperMode()
-                            
-                            
-                            
-                        
-            
+    
                 pg.display.flip()
                 self.draw()
         
@@ -211,12 +211,16 @@ class Menu():
             
         def info(self):
             pass
+        
+        
 class DeveloperMode():
     class GameObject():
         def __init__(self, image, name, objtype):
             self.image = image
             self.name = name
             self.objtype = objtype
+            
+            
     def __init__(self):
         self.planet1 = self.GameObject(pg.image.load(DIRECTION + "Planet1.png").convert_alpha(),
                                       'Planet1', 'planet')
@@ -234,6 +238,8 @@ class DeveloperMode():
         self.rfcash = [(100, 300), (400,300)]
         self.asteroidscash = []
         self.process(pg.event)
+        
+        
     def process(self,events):
         done = False
         gmobject = self.finish
@@ -288,11 +294,8 @@ class DeveloperMode():
                             workname = self.asteroid2.name
                             print(gmobject.name)
 
-                    
-                            
             self.draw()           
             pg.display.flip()
-            
             
             
     def cashing(self, gmobject, pos):
@@ -304,6 +307,8 @@ class DeveloperMode():
             self.rfcash[0] = pos
         elif gmobject.objtype == 'asteroid':
             self.asteroidscash.append([gmobject.name, pos])
+            
+            
     def draw(self):
         for planet in self.planetcash:
             screen.blit(pg.image.load(DIRECTION + planet[0] + '.png'), planet[1])
@@ -312,6 +317,7 @@ class DeveloperMode():
             screen.blit(pg.image.load(DIRECTION + asteroid[0] + '.png'), asteroid[1])
         screen.blit(self.rocket.image, self.rfcash[0])
         screen.blit(self.finish.image, self.rfcash[1])
+        
             
     def constructor(self):
         direction = 'sketches/'
@@ -334,12 +340,9 @@ class DeveloperMode():
             newlevel.write(asteroid[0] + '\n')
             newlevel.write(str(asteroid[1]) + '\n')
         newlevel.write('\n')
-        
         newlevel.close()
 
         
-        
-          
 class Rocket(pg.sprite.Sprite):
     """Класс ракеты."""
     def __init__(self, filename, pos):
@@ -358,6 +361,7 @@ class Rocket(pg.sprite.Sprite):
         self.downfire = pg.image.load(DIRECTION + "downfire1.png").convert_alpha()
         self.fullfire = pg.image.load(DIRECTION + "fullfire1.png").convert_alpha()
     
+    
     def motion(self):
         """Функция движения ракеты."""
         self.findangle(self.velocity)
@@ -367,6 +371,7 @@ class Rocket(pg.sprite.Sprite):
         
     
     def findangle(self, direction):
+        """Функция, поворачивающая ракету в напрвлении движения."""
         if direction[0] > 0:
            self.angle = math.degrees(math.atan2(-direction[1], direction[0]) )
         if direction[0] < 0:
@@ -374,23 +379,25 @@ class Rocket(pg.sprite.Sprite):
            
    
     def draw(self, surf, image, topleft, angle):
-            image.blit(self.upfire, topleft)
-            rotated_image = pg.transform.rotate(image, angle)
-            new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
-            surf.blit(rotated_image, new_rect.topleft)
-            #pg.draw.rect(surf, (255, 0, 0), new_rect, 2)
+        """Функция, отрисовывающая ракету на экране."""
+        image.blit(self.upfire, topleft)
+        rotated_image = pg.transform.rotate(image, angle)
+        new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
+        surf.blit(rotated_image, new_rect.topleft)
+        #pg.draw.rect(surf, (255, 0, 0), new_rect, 2)
             
     
     def gravity(self, planets): 
-        """ гравитация. принимаем на вход массив планет """
+        """Функция, реализующая изменение скорости ракеты под
+        действием гравитационных сил других объектов игрового поля."""
         z = runge_kutta(self.real_coord, self.velocity, planets)
         self.real_coord = z[0]
         self.velocity = z[1]
 
 
     def trajectory(self, planets, n):
-        """Траектория по которой будет двигаться ракета,
-        если двигатели не будут работать."""
+        """Функция, отрисовывающая траекторию по которой будет
+        двигаться ракета, если двигатели не будут работать."""
         [c0, c1] = self.real_coord
         [v0, v1] = self.velocity
         A = []
@@ -415,6 +422,9 @@ class Rocket(pg.sprite.Sprite):
         
    
     def activate(self, motion, dv):
+        """Функция, реализующая работу двигателей. Изменяет скорость
+        ракеты в соответсвие с работой двигателей, а также отрисовывает
+        выброс продуктов сгорания топлива."""
         if motion == LEFT:
             self.velocity[0] -= dv * math.sin(math.radians(self.angle))
             self.velocity[1] -= dv * math.cos(math.radians(self.angle))
@@ -423,16 +433,13 @@ class Rocket(pg.sprite.Sprite):
             self.velocity[0] += dv * math.sin(math.radians(self.angle))
             self.velocity[1] += dv * math.cos(math.radians(self.angle))
             return self.upfire
-            
         elif motion == UP:
             self.velocity[0] += dv * math.cos(math.radians(self.angle))
             self.velocity[1] -= dv * math.sin(math.radians(self.angle))
             return self.fullfire
-            
         elif motion == DOWN:
             if self.velocity[0]**2 + self.velocity[1]**2 <= 10000:
                 return self.image
-               
             else:
                 self.velocity[0] -= dv * math.cos(math.radians(self.angle))
                 self.velocity[1] += dv * math.sin(math.radians(self.angle))
@@ -442,6 +449,7 @@ class Rocket(pg.sprite.Sprite):
 
         
 class Planet(pg.sprite.Sprite): 
+    """Класс планет."""
     def __init__(self, filename, pos, rad, mass):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.image.load(filename).convert_alpha()
@@ -455,23 +463,10 @@ class Planet(pg.sprite.Sprite):
     def draw(self, x, y):
         self.rect = self.image.get_rect(center=(x + self.coord[0], y + self.coord[1]))
         screen.blit(self.image, self.rect)
-    
-    
-class Dust():
-    def __init__(self, x, y, w, h):
-        self.rec0 = pg.Rect(x, y, w, h)
-        self.a = x
-        self.b = y
-        self.c = [w, h]
-    
-    
-    def draw(self, x, y):
-        self.rec1 = pg.Rect((x + self.a, y + self.b), self.c)
-        pg.draw.rect(screen, (0,255,0), self.rec1)
         
         
 class Asteroid(pg.sprite.Sprite):
-    
+    """Класс астероидов."""
     def __init__(self, filename, pos, rad, mass):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.image.load(filename).convert_alpha()
@@ -483,6 +478,7 @@ class Asteroid(pg.sprite.Sprite):
     
     
     def draw(self, x, y):
+        """Функция, отрисовывающая астероид на экране."""
         self.rect = self.image.get_rect(center=(x + self.coord[0], y + self.coord[1]))
         screen.blit(self.image, self.rect)
         
@@ -503,6 +499,7 @@ class Finish(pg.sprite.Sprite):
 
 
 class Level():
+    """Класс уровня. Регулирует действия программы после переходу к уровню."""
     def __init__(self, clock, events, direction, filename):
         self.planets = []
         self.asteroids = []
@@ -627,7 +624,7 @@ class Level():
                         motion = DOWN
                 elif event.type == pg.KEYUP:
                     if event.key in [pg.K_LEFT,
-                                 pg.K_RIGHT]:
+                                 pg.K_RIGHT, pg.K_DOWN, pg.K_UP]:
                         motion = STOP
          
             image = self.rocket.activate(motion, self.dv)
@@ -643,6 +640,9 @@ class Level():
        
         
     def drawthemall(self, image):
+        """Функция реализует отрисовку объектов игрового поля.
+        Учитывает перемещение ракеты, чтобы она оставалась в определённом
+        месте на экране.""" 
         x = - self.rocket.coord[0] + self.rocket.coord0[0] 
         """x прибавляется к координатам изображений
         для создания эффекта движения камеры"""
@@ -659,10 +659,13 @@ class Level():
       
         
     def movethemall(self):
+        """Функция перемещает объекты игрового поля.""" 
         self.rocket.motion()      
         
         
     def oncollision(self):
+        """Функция обрабатывает столкновения ракеты
+        с объектами игрового поля.""" 
         for asteroid in self.asteroids:
             r1 = int(self.rocket.coord[0] - self.rocket.image.get_width()/2)
             r2 = int(self.rocket.coord[1] - self.rocket.image.get_height()/2)
@@ -682,6 +685,7 @@ class Level():
     
     
     def finish(self):
+        """Функция обрабатывает прилёт ракеты в пункт назначения.""" 
         r1 = int(self.rocket.coord[0] - self.rocket.image.get_width()/2)
         r2 = int(self.rocket.coord[1] - self.rocket.image.get_height()/2)
         a1 = int(self.objfinish.coord[0] - self.objfinish.image.get_width()/2)
@@ -690,12 +694,16 @@ class Level():
         if self.objfinish.mask.overlap_area(self.rocket.mask, offset) > 0:
             return True
         
-class Level_1(Level): 
+class Level_1(Level):
+    """Класс 1 уровня. Регулирует действия программы после переходу к 3 уровню.
+    Наследует методы класса Level."""
     def __init__(self, clock, events, direction, filename):
         super().__init__(clock, events, direction, filename)
 
         
-class Level_2(Level): 
+class Level_2(Level):
+    """Класс 2 уровня. Регулирует действия программы после переходу к 3 уровню.
+    Наследует методы класса Level."""
     def __init__(self, clock, events, direction, filename):
         super().__init__(clock, events, direction, filename)
         
@@ -714,6 +722,8 @@ class Level_2(Level):
         self.asteroids.append(Asteroid(DIRECTION + "Asteroid2.png", [400, 400], 40, 10))
         
 class Level_3(Level): 
+    """Класс 3 уровня. Регулирует действия программы после переходу к 3 уровню.
+    Наследует методы класса Level."""
     def __init__(self, clock, events, direction, filename):
         super().__init__(clock, events, direction, filename)
         
