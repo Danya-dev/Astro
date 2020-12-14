@@ -182,15 +182,6 @@ class Menu():
                     elif event.type == pg.KEYDOWN:
                         if self.position == 2 and event.key == pg.K_p:
                             return DeveloperMode()
-<<<<<<< HEAD
-                            
-                                 
-                            
-                        
-            
-=======
-    
->>>>>>> d9417275f93abaf7db0c4b2f5acdd88fc9588f9e
                 pg.display.flip()
                 self.draw()
         
@@ -227,12 +218,7 @@ class DeveloperMode():
             self.image = image
             self.name = name
             self.objtype = objtype
-<<<<<<< HEAD
             self.w, self.h = self.image.get_size()
-=======
-            
-            
->>>>>>> d9417275f93abaf7db0c4b2f5acdd88fc9588f9e
     def __init__(self):
         self.planet1 = self.GameObject(pg.image.load(DIRECTION + "Planet1.png").convert_alpha(),
                                       'Planet1', 'planet')
@@ -314,12 +300,11 @@ class DeveloperMode():
                         gmobject = self.delete
                         workname = self.delete.name
                         print(gmobject.name)
-
             self.draw()           
             pg.display.flip()
             
             
-<<<<<<< HEAD
+            
     def deleteobj(self, event):
         for gmobject in self.planetcash:
             x, y = gmobject[1]
@@ -329,10 +314,9 @@ class DeveloperMode():
             x, y = gmobject[1]
             if (x < event.pos[0] < x + gmobject[2]) and (y < event.pos[1] < y + gmobject[3]):
                 self.asteroidscash.remove(gmobject)
-                    
-        
-=======
->>>>>>> d9417275f93abaf7db0c4b2f5acdd88fc9588f9e
+                
+                
+                
     def cashing(self, gmobject, pos):
         if gmobject.objtype == 'planet':
             self.planetcash.append([gmobject.name, pos, gmobject.w, gmobject.h ])
@@ -341,11 +325,9 @@ class DeveloperMode():
         elif gmobject.objtype == 'rocket':
             self.rfcash[0] = pos
         elif gmobject.objtype == 'asteroid':
-<<<<<<< HEAD
             self.asteroidscash.append([gmobject.name, pos, gmobject.w, gmobject.h])
-=======
             self.asteroidscash.append([gmobject.name, pos])
->>>>>>> d9417275f93abaf7db0c4b2f5acdd88fc9588f9e
+
             
             
     def draw(self):
