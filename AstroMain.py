@@ -20,7 +20,7 @@ DOWN = "speed down"
 STOP = "not turn"
 
 
-DIRECTION = ''
+DIRECTION = 'textures/'
 LEVELDIRECTION = 'sketches/'
 canvas = pg.Surface(SCREEN_SIZE)
 window = pg.display.set_mode((SCREEN_SIZE))
@@ -133,20 +133,20 @@ class Menu():
         def __init__(self, screen):
             self.screen = screen
             self.levels = botton.Botton_image(self.screen, [90 , 513],
-                                              "play.png", "circle")
+                                              DIRECTION + "play.png", "circle")
             self.settings = botton.Botton_image(self.screen, [184 , 540],
-                                                "settings.png", "circle")
+                                                DIRECTION + "settings.png", "circle")
             # self.back = botton.Botton(self.screen, [100, 100], 120, 40,
             #                           (0, 0, 0), "Назад")
             self.position = 1  
             # Позиция меню. 1 - главное, 2 - уровни, 3 - настройки,
             # 4 - переход к уровню
             self.level_1 = botton.Botton_image(self.screen, [61, 487],
-                                                "level_1.png", "rect")
+                                               DIRECTION +  "level_1.png", "rect")
             self.level_2 = botton.Botton_image(self.screen, [117 , 495],
-                                                "level_2.png", "rect")
+                                                DIRECTION + "level_2.png", "rect")
             self.level_3 = botton.Botton_image(self.screen, [173 , 496],
-                                                "level_3.png", "rect")
+                                                DIRECTION + "level_3.png", "rect")
             self.sett = botton.Botton(self.screen, [160, 150], 240, 40,
                                          (0, 0, 0), "Всё уже настроено!")
             self.menufunc(clock, pg.event)
@@ -170,7 +170,7 @@ class Menu():
                                 return Level_1(clock, events, LEVELDIRECTION, 'level1.txt')
                             elif self.level_2.click(event.pos):
                                 return Level_2(clock, events, None, None)
-                            elif self.level_3.click(event.pos):
+                            elif self.level_3.click(event.pos): 
                                 return Level_3(clock, events, None, None)
                         else:   
                             if self.back.click(event.pos):
