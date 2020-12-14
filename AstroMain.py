@@ -444,7 +444,7 @@ class Rocket(pg.sprite.Sprite):
 class Planet(pg.sprite.Sprite): 
     def __init__(self, filename, pos, rad, mass):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.image.load(DIRECTION + filename).convert_alpha()
+        self.image = pg.image.load(filename).convert_alpha()
         self.coord = pos  # Координаты на экране в пикселах.
         self.real_coord = [pos[0]*scale_param, pos[1]*scale_param]  # Координаты в пространстве.  
         self.rad = rad
@@ -474,7 +474,7 @@ class Asteroid(pg.sprite.Sprite):
     
     def __init__(self, filename, pos, rad, mass):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.image.load(DIRECTION + filename).convert_alpha()
+        self.image = pg.image.load(filename).convert_alpha()
         self.coord = pos  # Координаты на экране в пикселах.
         self.real_coord = [pos[0]*scale_param, pos[1]*scale_param]  # Координаты в пространстве.  
         self.rad = rad
@@ -708,10 +708,10 @@ class Level_2(Level):
         self.asteroids = []
         self.dv = 10
         self.objfinish = Finish("Earth.png",[550, 300])
-        self.planets.append(Planet("Planet2.png", [300, 300], 40, 8E+28))
-        self.asteroids.append(Asteroid("Asteroid1.png", [100, 200], 40, 10))
-        self.asteroids.append(Asteroid("Asteroid1.png", [500, 200], 40, 10))
-        self.asteroids.append(Asteroid("Asteroid2.png", [400, 400], 40, 10))
+        self.planets.append(Planet(DIRECTION + "Planet2.png", [300, 300], 40, 8E+28))
+        self.asteroids.append(Asteroid(DIRECTION + "Asteroid1.png", [100, 200], 40, 10))
+        self.asteroids.append(Asteroid(DIRECTION + "Asteroid1.png", [500, 200], 40, 10))
+        self.asteroids.append(Asteroid(DIRECTION + "Asteroid2.png", [400, 400], 40, 10))
         
 class Level_3(Level): 
     def __init__(self, clock, events, direction, filename):
@@ -727,12 +727,12 @@ class Level_3(Level):
         self.dv = 5
         self.lenth_start_traject = 350        
         self.objfinish = Finish("Earth.png",[550, 400])
-        self.planets.append(Planet("Planet2.png", [300, 300], 40, 16E+28))
-        self.asteroids.append(Asteroid("Asteroid1.png", [100, 200], 40, 10))
-        self.asteroids.append(Asteroid("Asteroid1.png", [500, 200], 40, 10))
-        self.asteroids.append(Asteroid("Asteroid2.png", [400, 400], 40, 10))
-        self.asteroids.append(Asteroid("Asteroids.png", [150, 450], 40, 10))
-        self.planets.append(Planet("Planet1.png", [500, 100], 40, 8E+28))
+        self.planets.append(Planet(DIRECTION + "Planet2.png", [300, 300], 40, 16E+28))
+        self.asteroids.append(Asteroid(DIRECTION + "Asteroid1.png", [100, 200], 40, 10))
+        self.asteroids.append(Asteroid(DIRECTION + "Asteroid1.png", [500, 200], 40, 10))
+        self.asteroids.append(Asteroid(DIRECTION + "Asteroid2.png", [400, 400], 40, 10))
+        self.asteroids.append(Asteroid(DIRECTION + "Asteroids.png", [150, 450], 40, 10))
+        self.planets.append(Planet(DIRECTION + "Planet1.png", [500, 100], 40, 8E+28))
                                     
     
     
