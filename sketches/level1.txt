@@ -1,0 +1,30 @@
+Rocket:
+(103, 388)
+
+Finish:
+(552, 177)
+
+planets:
+Planet2
+(282, 235)
+Planet2
+(567, 388)
+Planet2
+(70, 78)
+
+asteroids:
+Asteroid1
+(343, 120)
+Asteroid1
+(462, 487)
+Asteroid1
+(40, 292)
+Asteroid1
+(647, 62)
+Asteroid1
+(388, 438)
+Asteroid1
+(367, 416)
+Asteroid1
+(120, 512)
+
