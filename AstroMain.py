@@ -134,26 +134,29 @@ def rotation(surface):
 
 
 class Menu():
-        '''Класс меню. Реализует отрисовку меню и функции меню.'''
+        """Класс меню. Реализует отрисовку меню и функции меню."""
         def __init__(self, screen):
             self.screen = screen
             self.levels = botton.Botton_image(self.screen, [90 , 513],
-
-                                              DIRECTION + "play.png", "circle")
-            self.settings = botton.Botton_image(self.screen, [184 , 540],
-                                                DIRECTION + "settings.png", "circle")
-            # self.back = botton.Botton(self.screen, [100, 100], 120, 40,
-            #                           (0, 0, 0), "Назад")
-
+                                              DIRECTION + "play.png",
+                                              "circle")
+            self.settings = botton.Botton_image(self.screen, [184 , 540], 
+                                                DIRECTION + "settings.png",
+                                                "circle")
+            self.back = botton.Botton(self.screen, [100, 100], 120, 40,
+                                       (0, 0, 0), "Назад")
             self.position = 1  
-            # Позиция меню. 1 - главное, 2 - уровни, 3 - настройки,
-            # 4 - переход к уровню
+            """Позиция меню. 1 - главное, 2 - уровни, 3 - настройки,
+            4 - переход к уровню."""
             self.level_1 = botton.Botton_image(self.screen, [61, 487],
-                                               DIRECTION +  "level_1.png", "rect")
+                                               DIRECTION +  "level_1.png",
+                                               "rect")
             self.level_2 = botton.Botton_image(self.screen, [117 , 495],
-                                                DIRECTION + "level_2.png", "rect")
+                                                DIRECTION + "level_2.png",
+                                                "rect")
             self.level_3 = botton.Botton_image(self.screen, [173 , 496],
-                                                DIRECTION + "level_3.png", "rect")
+                                                DIRECTION + "level_3.png",
+                                                "rect")
             self.sett = botton.Botton(self.screen, [160, 150], 240, 40,
                                          (0, 0, 0), "Всё уже настроено!")
             self.menufunc(clock, pg.event)
@@ -175,7 +178,8 @@ class Menu():
                                 self.position = 3
                         elif self.position == 2:   
                             if self.level_1.click(event.pos):
-                                return Level_1(clock, events, LEVELDIRECTION, 'level1.txt')
+                                return Level_1(clock, events,
+                                               LEVELDIRECTION, 'level1.txt')
                             elif self.level_2.click(event.pos):
                                 return Level_2(clock, events, None, None)
                             elif self.level_3.click(event.pos): 
@@ -223,20 +227,29 @@ class DeveloperMode():
             self.name = name
             self.objtype = objtype
             self.w, self.h = self.image.get_size()
+            
+            
     def __init__(self):
-        self.planet1 = self.GameObject(pg.image.load(DIRECTION + "Planet1.png").convert_alpha(),
+        self.planet1 = self.GameObject(
+            pg.image.load(DIRECTION + "Planet1.png").convert_alpha(),
                                       'Planet1', 'planet')
-        self.planet2 = self.GameObject(pg.image.load(DIRECTION + "Planet2.png").convert_alpha(),
+        self.planet2 = self.GameObject(
+            pg.image.load(DIRECTION + "Planet2.png").convert_alpha(),
                                       'Planet2', 'planet')
-        self.finish = self.GameObject(pg.image.load(DIRECTION + "Earth.png").convert_alpha(),
+        self.finish = self.GameObject(
+            pg.image.load(DIRECTION + "Earth.png").convert_alpha(),
                                       'finish' ,'finish')
-        self.asteroid1 = self.GameObject(pg.image.load(DIRECTION + "Asteroid1.png").convert_alpha(),
+        self.asteroid1 = self.GameObject(
+            pg.image.load(DIRECTION + "Asteroid1.png").convert_alpha(),
                                          'Asteroid1', 'asteroid')
-        self.asteroid2 = self.GameObject(pg.image.load(DIRECTION + "Asteroid2.png").convert_alpha(),
+        self.asteroid2 = self.GameObject(
+            pg.image.load(DIRECTION + "Asteroid2.png").convert_alpha(),
                                          'Asteroid2', 'asteroid')
-        self.rocket = self.GameObject(pg.image.load(DIRECTION + "Rocket.png").convert_alpha(),
+        self.rocket = self.GameObject(
+            pg.image.load(DIRECTION + "Rocket.png").convert_alpha(),
                                       'rocket', 'rocket')
-        self.delete = self.GameObject(pg.image.load(DIRECTION + "Rocket.png"), 'Delete', 'Delete')
+        self.delete = self.GameObject(
+            pg.image.load(DIRECTION + "Rocket.png"), 'Delete', 'Delete')
         self.planetcash = []
         self.rfcash = [(100, 300), (400,300)]
         self.asteroidscash = []
@@ -312,34 +325,40 @@ class DeveloperMode():
     def deleteobj(self, event):
         for gmobject in self.planetcash:
             x, y = gmobject[1]
-            if (x < event.pos[0] < x + gmobject[2]) and (y < event.pos[1] < y + gmobject[3]):
+            if (x < event.pos[0] < x + gmobject[2]) and (
+                    y < event.pos[1] < y + gmobject[3]):
                 self.planetcash.remove(gmobject)
         for gmobject in self.asteroidscash:
             x, y = gmobject[1]
-            if (x < event.pos[0] < x + gmobject[2]) and (y < event.pos[1] < y + gmobject[3]):
+            if (x < event.pos[0] < x + gmobject[2]) and (
+                    y < event.pos[1] < y + gmobject[3]):
                 self.asteroidscash.remove(gmobject)
                 
                 
                 
     def cashing(self, gmobject, pos):
         if gmobject.objtype == 'planet':
-            self.planetcash.append([gmobject.name, pos, gmobject.w, gmobject.h ])
+            self.planetcash.append([gmobject.name, pos,
+                                    gmobject.w, gmobject.h ])
         elif gmobject.objtype == 'finish':
             self.rfcash[1] = pos
         elif gmobject.objtype == 'rocket':
             self.rfcash[0] = pos
         elif gmobject.objtype == 'asteroid':
-            self.asteroidscash.append([gmobject.name, pos, gmobject.w, gmobject.h])
+            self.asteroidscash.append([gmobject.name, pos,
+                                       gmobject.w, gmobject.h])
             self.asteroidscash.append([gmobject.name, pos])
 
             
             
     def draw(self):
         for planet in self.planetcash:
-            screen.blit(pg.image.load(DIRECTION + planet[0] + '.png'), planet[1])
+            screen.blit(pg.image.load(DIRECTION + planet[0] + '.png'),
+                        planet[1])
           
         for asteroid in self.asteroidscash:
-            screen.blit(pg.image.load(DIRECTION + asteroid[0] + '.png'), asteroid[1])
+            screen.blit(pg.image.load(DIRECTION + asteroid[0] + '.png'),
+                        asteroid[1])
         screen.blit(self.rocket.image, self.rfcash[0])
         screen.blit(self.finish.image, self.rfcash[1])
         
@@ -376,15 +395,21 @@ class Rocket(pg.sprite.Sprite):
         self.w , self.h = self.image.get_size()
         self.coord0 = [pos[0], pos[1]]
         self.coord = pos # Координаты на экране в пикселах.
-        self.real_coord = [self.coord[0]*scale_param, self.coord[1]*scale_param]  # Координаты в пространстве. 
+        self.real_coord = [self.coord[0]*scale_param,  # Координаты в
+                           self.coord[1]*scale_param]  # пространстве. 
         self.rect = self.image.get_rect(center=(self.coord[0], self.coord[1]))
         self.mask = pg.mask.from_surface(self.image)
         self.angle = 0
         self.velocity = [0,0]
         self.cam = [0, 0]
-        self.upfire = pg.image.load(DIRECTION + "upfire1.png").convert_alpha()
-        self.downfire = pg.image.load(DIRECTION + "downfire1.png").convert_alpha()
-        self.fullfire = pg.image.load(DIRECTION + "fullfire1.png").convert_alpha()
+        self.upfire = pg.image.load(
+            DIRECTION + "upfire1.png").convert_alpha()
+        self.downfire = pg.image.load(
+            DIRECTION + "downfire1.png").convert_alpha()
+        self.fullfire = pg.image.load(
+            DIRECTION + "fullfire1.png").convert_alpha()
+        self.frontfire = pg.image.load(
+            DIRECTION + "frontfire1.png").convert_alpha()
     
     
     def motion(self):
@@ -392,22 +417,25 @@ class Rocket(pg.sprite.Sprite):
         self.findangle(self.velocity)
         self.coord[0] = int(self.real_coord[0] / scale_param)
         self.coord[1] = int(self.real_coord[1] / scale_param)
-        self.rect = self.image.get_rect(center=(self.coord[0], self.coord[1]))
+        self.rect = self.image.get_rect(center=(self.coord[0],
+                                                self.coord[1]))
         
     
     def findangle(self, direction):
         """Функция, поворачивающая ракету в напрвлении движения."""
         if direction[0] > 0:
-           self.angle = math.degrees(math.atan2(-direction[1], direction[0]) )
+           self.angle = math.degrees(math.atan2(-direction[1], direction[0]))
         if direction[0] < 0:
-           self.angle = math.degrees(-math.atan2(-direction[1], -direction[0]) - math.pi)   
+           self.angle = math.degrees(-math.atan2(
+               -direction[1], -direction[0]) - math.pi)   
            
    
     def draw(self, surf, image, topleft, angle):
         """Функция, отрисовывающая ракету на экране."""
         image.blit(self.upfire, topleft)
         rotated_image = pg.transform.rotate(image, angle)
-        new_rect = rotated_image.get_rect(center = image.get_rect(topleft = topleft).center)
+        new_rect = rotated_image.get_rect(
+            center = image.get_rect(topleft = topleft).center)
         surf.blit(rotated_image, new_rect.topleft)
         #pg.draw.rect(surf, (255, 0, 0), new_rect, 2)
             
@@ -468,7 +496,7 @@ class Rocket(pg.sprite.Sprite):
             else:
                 self.velocity[0] -= dv * math.cos(math.radians(self.angle))
                 self.velocity[1] += dv * math.sin(math.radians(self.angle))
-                return self.image             
+                return self.frontfire            
         elif motion == STOP:
             return self.image
 
@@ -479,14 +507,16 @@ class Planet(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.image.load(filename).convert_alpha()
         self.coord = pos  # Координаты на экране в пикселах.
-        self.real_coord = [pos[0]*scale_param, pos[1]*scale_param]  # Координаты в пространстве.  
+        self.real_coord = [pos[0]*scale_param,
+                           pos[1]*scale_param]  # Координаты в пространстве.  
         self.rad = rad
         self.mass = mass
         self.mask = pg.mask.from_surface(self.image)
     
     
     def draw(self, x, y):
-        self.rect = self.image.get_rect(center=(x + self.coord[0], y + self.coord[1]))
+        self.rect = self.image.get_rect(
+            center=(x + self.coord[0], y + self.coord[1]))
         screen.blit(self.image, self.rect)
         
         
@@ -496,7 +526,8 @@ class Asteroid(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.image.load(filename).convert_alpha()
         self.coord = pos  # Координаты на экране в пикселах.
-        self.real_coord = [pos[0]*scale_param, pos[1]*scale_param]  # Координаты в пространстве.  
+        self.real_coord = [pos[0]*scale_param,
+                           pos[1]*scale_param]  # Координаты в пространстве.  
         self.rad = rad
         self.mass = mass        
         self.mask = pg.mask.from_surface(self.image)
@@ -504,7 +535,8 @@ class Asteroid(pg.sprite.Sprite):
     
     def draw(self, x, y):
         """Функция, отрисовывающая астероид на экране."""
-        self.rect = self.image.get_rect(center=(x + self.coord[0], y + self.coord[1]))
+        self.rect = self.image.get_rect(
+            center=(x + self.coord[0], y + self.coord[1]))
         screen.blit(self.image, self.rect)
         
         
@@ -519,7 +551,8 @@ class Finish(pg.sprite.Sprite):
     
     
     def draw(self, x, y):
-        self.rect = self.image.get_rect(center=(x + self.coord[0], y + self.coord[1]))
+        self.rect = self.image.get_rect(
+            center=(x + self.coord[0], y + self.coord[1]))
         screen.blit(self.image, self.rect)
 
 
@@ -564,8 +597,9 @@ class Level():
         line = level.readline()
         print(line)
         while not(line == '\n'):
-            self.asteroids.append(Asteroid(DIRECTION + line[0: len(line)-1] + '.png',
-                                  stringhelper(level.readline()), 40, 10))
+            self.asteroids.append(Asteroid(
+                DIRECTION + line[0: len(line)-1] + '.png',
+                stringhelper(level.readline()), 40, 10))
             line = level.readline()
         level.close()
             
@@ -624,7 +658,8 @@ class Level():
                         Level_1(clock, events)
                         done = True
                         return False
-                    elif (event.key == pg.K_SPACE) or (event.key == pg.K_ESCAPE):
+                    elif (event.key == pg.K_SPACE) or (
+                            event.key == pg.K_ESCAPE):
                         i = 0
                         while i < 1:
                             done = True
@@ -636,7 +671,8 @@ class Level():
                                         i = 1
                                         done = False
                                         Level_1(clock, events)
-                                    elif(event.key == pg.K_SPACE) or (event.key == pg.K_ESCAPE):
+                                    elif(event.key == pg.K_SPACE) or (
+                                            event.key == pg.K_ESCAPE):
                                         i = 1  
                                         done = False
                     elif event.key == pg.K_LEFT:
@@ -713,8 +749,10 @@ class Level():
         """Функция обрабатывает прилёт ракеты в пункт назначения.""" 
         r1 = int(self.rocket.coord[0] - self.rocket.image.get_width()/2)
         r2 = int(self.rocket.coord[1] - self.rocket.image.get_height()/2)
-        a1 = int(self.objfinish.coord[0] - self.objfinish.image.get_width()/2)
-        a2 = int(self.objfinish.coord[1] - self.objfinish.image.get_height()/2)
+        a1 = int(
+            self.objfinish.coord[0] - self.objfinish.image.get_width()/2)
+        a2 = int(
+            self.objfinish.coord[1] - self.objfinish.image.get_height()/2)
         offset = (r1 - a1, r2 - a2)
         if self.objfinish.mask.overlap_area(self.rocket.mask, offset) > 0:
             return True
@@ -741,10 +779,14 @@ class Level_2(Level):
         self.asteroids = []
         self.dv = 10
         self.objfinish = Finish("Earth.png",[550, 300])
-        self.planets.append(Planet(DIRECTION + "Planet2.png", [300, 300], 40, 8E+28))
-        self.asteroids.append(Asteroid(DIRECTION + "Asteroid1.png", [100, 200], 40, 10))
-        self.asteroids.append(Asteroid(DIRECTION + "Asteroid1.png", [500, 200], 40, 10))
-        self.asteroids.append(Asteroid(DIRECTION + "Asteroid2.png", [400, 400], 40, 10))
+        self.planets.append(
+            Planet(DIRECTION + "Planet2.png", [300, 300], 40, 8E+28))
+        self.asteroids.append(
+            Asteroid(DIRECTION + "Asteroid1.png", [100, 200], 40, 10))
+        self.asteroids.append(
+            Asteroid(DIRECTION + "Asteroid1.png", [500, 200], 40, 10))
+        self.asteroids.append(
+            Asteroid(DIRECTION + "Asteroid2.png", [400, 400], 40, 10))
         
 class Level_3(Level): 
     """Класс 3 уровня. Регулирует действия программы после переходу к 3 уровню.
@@ -762,15 +804,20 @@ class Level_3(Level):
         self.dv = 5
         self.lenth_start_traject = 350        
         self.objfinish = Finish("Earth.png",[550, 400])
-        self.planets.append(Planet(DIRECTION + "Planet2.png", [300, 300], 40, 16E+28))
-        self.asteroids.append(Asteroid(DIRECTION + "Asteroid1.png", [100, 200], 40, 10))
-        self.asteroids.append(Asteroid(DIRECTION + "Asteroid1.png", [500, 200], 40, 10))
-        self.asteroids.append(Asteroid(DIRECTION + "Asteroid2.png", [400, 400], 40, 10))
-        self.asteroids.append(Asteroid(DIRECTION + "Asteroids.png", [150, 450], 40, 10))
-        self.planets.append(Planet(DIRECTION + "Planet1.png", [500, 100], 40, 8E+28))
+        self.planets.append(
+            Planet(DIRECTION + "Planet2.png", [300, 300], 40, 16E+28))
+        self.asteroids.append(
+            Asteroid(DIRECTION + "Asteroid1.png", [100, 200], 40, 10))
+        self.asteroids.append(
+            Asteroid(DIRECTION + "Asteroid1.png", [500, 200], 40, 10))
+        self.asteroids.append(
+            Asteroid(DIRECTION + "Asteroid2.png", [400, 400], 40, 10))
+        self.asteroids.append(
+            Asteroid(DIRECTION + "Asteroids.png", [150, 450], 40, 10))
+        self.planets.append(
+            Planet(DIRECTION + "Planet1.png", [500, 100], 40, 8E+28))
                                     
-    
-    
+     
 screen = pg.display.set_mode(SCREEN_SIZE)
 pg.display.set_caption("Astro")
 
