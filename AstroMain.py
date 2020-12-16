@@ -329,6 +329,7 @@ class DeveloperMode():
                         print(gmobject.name)
                     if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
                         f1 = True
+
                         dx -= 5
                     if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
                         f2 = True
@@ -339,6 +340,7 @@ class DeveloperMode():
                     if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
                         f4 = True
                         dx += 5 
+
                 elif event.type == pg.KEYUP: 
                     if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
                         f1 = False
@@ -349,6 +351,7 @@ class DeveloperMode():
                     if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
                         f4 = False
             if f1:
+
                 dx += 5
             if f2:
                 dx -= 5
@@ -356,6 +359,7 @@ class DeveloperMode():
                 dy += 5
             if f4:
                 dy -= 5
+
             self.draw(dx, dy)           
             pg.display.flip()
             
@@ -767,8 +771,7 @@ class Level():
                                 elif event.type == pg.KEYDOWN:
                                     if event.key == pg.K_r:
                                         i = 1
-                                        done = False
-                                        Level_1(clock, events)
+                                        return True
                                     elif(event.key == pg.K_SPACE) or (
                                             event.key == pg.K_ESCAPE):
                                         i = 1  
