@@ -181,14 +181,14 @@ class Menu():
                         elif self.position == 2:   
                             if self.level_1.click(event.pos):
                                 return Level_1(clock, events,
-                                               LEVELDIRECTION, 'level1.txt')
+                                               LEVELDIRECTION, 'level1.txt',30)
                             elif self.level_2.click(event.pos):
-                                return Level_2(clock, events, None, None)
+                                return Level_2(clock, events, LEVELDIRECTION, 'level2.txt',30)
                             elif self.level_3.click(event.pos): 
-                                return Level_3(clock, events, None, None)
+                                return Level_3(clock, events, None, None,20)
                             elif self.level_4.click(event.pos): 
                                 return Level_4(clock, events,
-                                               LEVELDIRECTION, 'level4.txt')
+                                               LEVELDIRECTION, 'level4.txt',20)
                         else:   
                             if self.back.click(event.pos):
                                 self.position = 1   
@@ -606,8 +606,7 @@ class Finish(pg.sprite.Sprite):
 
 class Level():
     """Класс уровня. Регулирует действия программы после переходу к уровню."""
-    def __init__(self, clock, events, direction, filename):
-        self.dv = 20
+    def __init__(self, clock, events, direction, filename, dv):       
         self.width = 30
         self.lenth_start_traject = 150
         gamegoes = True
@@ -952,21 +951,6 @@ class Level_2(Level):
         super().__init__(clock, events, direction, filename)
         
         
-    def preparation(self, direction, filename):
-        """Функция готовит объекты игрового поля."""
-        self.rocket = Rocket("Rocket.png",[100, 300])
-        self.planets = []
-        self.asteroids = []
-        self.dv = 10
-        self.objfinish = Finish("Earth.png",[550, 300])
-        self.planets.append(
-            Planet(DIRECTION + "Planet2.png", [300, 300], 40, 8E+28))
-        self.asteroids.append(
-            Asteroid(DIRECTION + "Asteroid1.png", [100, 200], 40, 10))
-        self.asteroids.append(
-            Asteroid(DIRECTION + "Asteroid1.png", [500, 200], 40, 10))
-        self.asteroids.append(
-            Asteroid(DIRECTION + "Asteroid2.png", [400, 400], 40, 10))
         
 class Level_3(Level): 
     """Класс 3 уровня. Регулирует действия программы после переходу к 3 уровню.
