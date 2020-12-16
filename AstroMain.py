@@ -170,7 +170,7 @@ class Menu():
                                                 "circle")
             """Кнопка перехода к настройкам."""
             
-            self.back = botton.Botton_image(screen, [61, 100],
+            self.back = botton.Botton_image(screen, [61, 495],
                                        DIRECTION + "back.png",
                                                 "rect")
             """Кнопка подъёма на один уровень в меню."""
@@ -179,22 +179,22 @@ class Menu():
             """Позиция меню. 1 - главное, 2 - уровни, 3 - настройки,
             4 - переход к уровню."""
             
-            self.level_1 = botton.Botton_image(screen, [61, 486],
+            self.level_1 = botton.Botton_image(screen, [126, 489],
                                                DIRECTION +  "level_1.png",
                                                "rect")
             """Кнопка перехода к первому уровню."""
             
-            self.level_2 = botton.Botton_image(screen, [117 , 496],
+            self.level_2 = botton.Botton_image(screen, [182, 496],
                                                 DIRECTION + "level_2.png",
                                                 "rect")
             """Кнопка перехода ко второму уровню."""
             
-            self.level_3 = botton.Botton_image(screen, [173 , 496],
+            self.level_3 = botton.Botton_image(screen, [238, 496],
                                                 DIRECTION + "level_3.png",
                                                 "rect")
             """Кнопка перехода к третьему уровню."""
             
-            self.level_4 = botton.Botton_image(screen, [229 , 496],
+            self.level_4 = botton.Botton_image(screen, [294, 496],
                                                 DIRECTION + "level_4.png",
                                                 "rect")
             """Кнопка перехода к четвёртому уровню."""
@@ -224,14 +224,17 @@ class Menu():
                         elif self.position == 2:   
                             if self.level_1.click(event.pos):
                                 return Level_1(clock, events,
-                                               LEVELDIRECTION, 'level1.txt',30)
+                                               LEVELDIRECTION,
+                                               'level1.txt', 30)
                             elif self.level_2.click(event.pos):
-                                return Level_2(clock, events, LEVELDIRECTION, 'level2.txt',30)
+                                return Level_2(clock, events, LEVELDIRECTION,
+                                               'level2.txt', 30)
                             elif self.level_3.click(event.pos): 
-                                return Level_3(clock, events, None, None,20)
+                                return Level_3(clock, events, None, None, 20)
                             elif self.level_4.click(event.pos): 
                                 return Level_4(clock, events,
-                                               LEVELDIRECTION, 'level4.txt')
+                                               LEVELDIRECTION, 'level4.txt',
+                                               30)
                             elif self.back.click(event.pos):
                                 self.position = 1 
                         elif self.position == 3 and self.back.click(
@@ -260,18 +263,6 @@ class Menu():
             if self.position == 3:
                 self.sett.draw()
                 self.back.draw()
-    
-        
-        def levels(self):
-            pass
-            
-           
-        def setting(self):
-            pass
-            
-            
-        def info(self):
-            pass
         
         
 class DeveloperMode():
