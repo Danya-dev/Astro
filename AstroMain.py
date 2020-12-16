@@ -253,15 +253,15 @@ class DeveloperMode():
         self.planetcash = []
         self.rfcash = [(400, 300), (600,300)]
         self.asteroidscash = []
-        self.process(pg.event)
+        self.process(pg.time.Clock(), pg.event)
         
         
-    def process(self,events):
+    def process(self, clock, events):
         done = False
         gmobject = self.finish
         workname = 'finish'
         while not done:
-            clock.tick(30 )
+            clock.tick(30)
             screen.blit(space, screenpos)            
             for event in events.get():
                 if event.type == pg.QUIT:
@@ -281,6 +281,10 @@ class DeveloperMode():
                     if event.key == pg.K_RETURN:
                         self.constructor()
                         done = True
+                    elif event.key == pg.K_o:
+                        prgo = True
+                        while prgo:
+                            prgo = self.preview(clock, events)
                     elif event.key == pg.K_p:
                         gmobject.name = 'planet'
                         print(gmobject.name)
@@ -626,7 +630,7 @@ class Level():
                 if event.type == pg.QUIT:
                     done = True
                 elif event.type == pg.KEYDOWN: 
-                    if event.key == pg.K_p:
+                    if event.key == pg.K_o:
                         prgo = True
                         while prgo:
                             prgo = self.preview(clock, events)
@@ -667,6 +671,9 @@ class Level():
                 if event.type == pg.QUIT:
                     done = True
                 if event.type == pg.KEYDOWN: 
+                    if (event.key == pg.K_o):
+                        done = True
+                        return(False)
                     if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
                         f1 = True
                     if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
@@ -695,7 +702,7 @@ class Level():
             if f4:
                 y -= 1
             self.drawthemall(image, x, y)
-            pg.display.flip()
+            # pg.display.flip()
             
             
     def process(self, clock, events):
