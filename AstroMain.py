@@ -1079,8 +1079,7 @@ class Level():
                         done = True
                     elif event.key == pg.K_r:
                         return True
-                    elif (event.key == pg.K_SPACE) or (
-                            event.key == pg.K_ESCAPE):
+                    elif event.key == pg.K_SPACE:
                         i = 0
                         while i < 1:
                             done = True
@@ -1091,8 +1090,7 @@ class Level():
                                     if event.key == pg.K_r:
                                         i = 1
                                         return True
-                                    elif(event.key == pg.K_SPACE) or (
-                                            event.key == pg.K_ESCAPE):
+                                    elif event.key == pg.K_SPACE:
                                         i = 1  
                                         done = False
                                         
