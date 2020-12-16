@@ -160,17 +160,17 @@ class Menu():
         """Класс меню. Реализует отрисовку меню и функции меню.
         """
         def __init__(self):
-            self.levels = botton.Botton_image(screen, [90 , 513],
+            self.levels = botton.Botton_image(screen, [90, 513],
                                               DIRECTION + "play.png",
                                               "circle")
             """Кнопка перехода к выбору уровня."""
             
-            self.settings = botton.Botton_image(screen, [184 , 540], 
+            self.settings = botton.Botton_image(screen, [184, 540], 
                                                 DIRECTION + "settings.png",
                                                 "circle")
             """Кнопка перехода к настройкам."""
             
-            self.back = botton.Botton_image(screen, [61, 100],
+            self.back = botton.Botton_image(screen, [61, 495],
                                        DIRECTION + "back.png",
                                                 "rect")
             """Кнопка подъёма на один уровень в меню."""
@@ -179,22 +179,22 @@ class Menu():
             """Позиция меню. 1 - главное, 2 - уровни, 3 - настройки,
             4 - переход к уровню."""
             
-            self.level_1 = botton.Botton_image(screen, [61, 486],
+            self.level_1 = botton.Botton_image(screen, [126, 489],
                                                DIRECTION +  "level_1.png",
                                                "rect")
             """Кнопка перехода к первому уровню."""
             
-            self.level_2 = botton.Botton_image(screen, [117 , 496],
+            self.level_2 = botton.Botton_image(screen, [182, 496],
                                                 DIRECTION + "level_2.png",
                                                 "rect")
             """Кнопка перехода ко второму уровню."""
             
-            self.level_3 = botton.Botton_image(screen, [173 , 496],
+            self.level_3 = botton.Botton_image(screen, [238, 496],
                                                 DIRECTION + "level_3.png",
                                                 "rect")
             """Кнопка перехода к третьему уровню."""
             
-            self.level_4 = botton.Botton_image(screen, [229 , 496],
+            self.level_4 = botton.Botton_image(screen, [294, 496],
                                                 DIRECTION + "level_4.png",
                                                 "rect")
             """Кнопка перехода к четвёртому уровню."""
@@ -225,14 +225,21 @@ class Menu():
                         elif self.position == 2:   
                             if self.level_1.click(event.pos):
                                 return Level_1(clock, events,
-                                               LEVELDIRECTION, 'level1.txt',30)
+                                               LEVELDIRECTION,
+                                               'level1.txt', 30)
                             elif self.level_2.click(event.pos):
-                                return Level_2(clock, events, LEVELDIRECTION, 'level2.txt',30)
+                                return Level_2(clock, events, LEVELDIRECTION,
+                                               'level2.txt', 30)
                             elif self.level_3.click(event.pos): 
-                                return Level_3(clock, events, None, None,20)
+                                return Level_3(clock, events, None, None, 20)
                             elif self.level_4.click(event.pos): 
                                 return Level_4(clock, events,
+<<<<<<< HEAD
                                                LEVELDIRECTION, 'level4.txt',20)
+=======
+                                               LEVELDIRECTION, 'level4.txt',
+                                               30)
+>>>>>>> 362aefe40be57e18ef5fb3c21859b4118de3e14f
                             elif self.back.click(event.pos):
                                 self.position = 1 
                         elif self.position == 3 and self.back.click(
@@ -262,18 +269,6 @@ class Menu():
             if self.position == 3:
                 self.sett.draw()
                 self.back.draw()
-    
-        
-        def levels(self):
-            pass
-            
-           
-        def setting(self):
-            pass
-            
-            
-        def info(self):
-            pass
         
         
 class DeveloperMode():
@@ -334,7 +329,7 @@ class DeveloperMode():
         self.planetcash = []
         """Лист добавляемых планет."""
         
-        self.rfcash = [(400, 300), (600,300)]
+        self.rfcash = [(400, 300), (600, 300)]
         """Лист координат ракеты и финиша соответственно."""
         
         self.asteroidscash = []
@@ -365,8 +360,8 @@ class DeveloperMode():
                                 pos[1] += event.pos[1]
                                 self.deleteobj(pos)
                             else:   
-                                pos[0] += int( event.pos[0] - gmobject.w / 2)
-                                pos[1] += int(event.pos[1] - gmobject.h / 2)                               
+                                pos[0] += int( event.pos[0] - gmobject.w/2)
+                                pos[1] += int(event.pos[1] - gmobject.h/2)                               
                                 self.cashing(gmobject, pos)
                 elif event.type == pg.KEYDOWN:
                     if event.key == pg.K_RETURN:
@@ -410,7 +405,6 @@ class DeveloperMode():
                         print(gmobject.name)
                     if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
                         f1 = True
-
                         dx -= 5
                     if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
                         f2 = True
@@ -421,7 +415,6 @@ class DeveloperMode():
                     if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
                         f4 = True
                         dx += 5 
-
                 elif event.type == pg.KEYUP: 
                     if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
                         f1 = False
@@ -432,7 +425,6 @@ class DeveloperMode():
                     if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
                         f4 = False
             if f1:
-
                 dx += 5
             if f2:
                 dx -= 5
@@ -462,13 +454,12 @@ class DeveloperMode():
                 self.asteroidscash.remove(gmobject)
                 
                 
-                
     def cashing(self, gmobject, pos):
         """Функция, которая фиксирует добавленный объект.
         """ 
         if gmobject.objtype == 'planet':
             self.planetcash.append([gmobject.name, pos,
-                                    gmobject.w, gmobject.h ])
+                                    gmobject.w, gmobject.h])
             print(self.planetcash[len(self.planetcash)-1])
         elif gmobject.objtype == 'finish':
             self.rfcash[1] = pos
@@ -819,7 +810,6 @@ class Asteroid(pg.sprite.Sprite):
         screen.blit(self.image, self.rect)
         
         
-        
 class Finish(pg.sprite.Sprite):
     """Класс объекта-финиша."""
     def __init__(self, filename, pos):
@@ -898,12 +888,12 @@ class Level():
         True, и на то, что игровой процесс завершён, если её значение
         False."""
         
-        pg.mouse.set_visible(False) # Сокрытие курсора.
         while gamegoes:
             self.preparation(direction, filename)
             self.start(clock, events)
+            pg.mouse.set_visible(False) # Сокрытие курсора.
             gamegoes = self.process(clock, events)
-        pg.mouse.set_visible(True) # Курсор делается видимым.
+            pg.mouse.set_visible(True) # Курсор делается видимым.
         return Menu()      
 
             
@@ -941,8 +931,7 @@ class Level():
             line = level.readline()
             self.planets.append(Planet(DIRECTION + name + '.png',
                                 stringhelper(line), 40, mass))
-            line = level.readline()
-            print(line)            
+            line = level.readline()            
         level.readline()
         line = level.readline()
         while not(line == '\n'):
@@ -1102,17 +1091,18 @@ class Level():
                                         return True
                                     elif event.key == pg.K_SPACE:
                                         i = 1  
-                                        done = False
-                                        
-                    if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
-                        f1 = True
-                    if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
-                        f2 = True
-                    if (event.key == pg.K_UP) or (event.key == pg.K_w):
-                        f3 = True
-                    if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
-                        f4 = True
-
+                                        done = False                
+                    if event.type == pg.QUIT:
+                        done = True
+                    else:                     
+                        if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
+                            f1 = True
+                        if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
+                            f2 = True
+                        if (event.key == pg.K_UP) or (event.key == pg.K_w):
+                            f3 = True
+                        if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
+                            f4 = True
                 elif event.type == pg.KEYUP: 
                     if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
                         f1 = False
@@ -1122,7 +1112,6 @@ class Level():
                         f3 = False
                     if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
                         f4 = False
-              
             if f1:
                 motion = LEFT
                 image = self.rocket.activate(motion, self.dv)
@@ -1137,7 +1126,6 @@ class Level():
                 if self.finish():
                     return False
                 pg.display.flip()
-                
             if f2:
                 motion = RIGHT
                 image = self.rocket.activate(motion, self.dv)
@@ -1151,8 +1139,7 @@ class Level():
                     return True
                 if self.finish():
                     return False
-                pg.display.flip()
-                
+                pg.display.flip() 
             if f3:
                 motion = UP
                 image = self.rocket.activate(motion, self.dv)
@@ -1167,7 +1154,6 @@ class Level():
                 if self.finish():
                     return False
                 pg.display.flip()
-                
             if f4:
                 motion = DOWN
                 image = self.rocket.activate(motion, self.dv)
@@ -1181,8 +1167,7 @@ class Level():
                     return True
                 if self.finish():
                     return False
-                pg.display.flip()
-                
+                pg.display.flip() 
             if f5:
                 motion = STOP
                 image = self.rocket.activate(motion, self.dv)
@@ -1329,6 +1314,5 @@ clock = pg.time.Clock()
 pg.mixer.music.load('music1.mp3')
 pg.mixer.music.play(-1, 20)
 menu = Menu()    
-
 
 pg.quit()
