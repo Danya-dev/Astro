@@ -251,7 +251,7 @@ class DeveloperMode():
         self.delete = self.GameObject(
             pg.image.load(DIRECTION + "Rocket.png"), 'Delete', 'Delete')
         self.planetcash = []
-        self.rfcash = [(100, 300), (400,300)]
+        self.rfcash = [(400, 300), (600,300)]
         self.asteroidscash = []
         self.process(pg.event)
         
@@ -559,8 +559,6 @@ class Finish(pg.sprite.Sprite):
 class Level():
     """Класс уровня. Регулирует действия программы после переходу к уровню."""
     def __init__(self, clock, events, direction, filename):
-        self.planets = []
-        self.asteroids = []
         self.dv = 20
         self.width = 30
         self.lenth_start_traject = 150
@@ -578,6 +576,8 @@ class Level():
             
     def preparation(self,direction, filename):
         """Функция готовит объекты игрового поля."""
+        self.planets = []
+        self.asteroids = []
         level = open(direction + filename, 'r')
         level.readline()
         self.rocket = Rocket("Rocket.png",
@@ -710,9 +710,7 @@ class Level():
                     done = True
                 elif event.type == pg.KEYDOWN: 
                     if event.key == pg.K_r:
-                        Level_1(clock, events)
-                        done = True
-                        return False
+                        return True
                     elif (event.key == pg.K_SPACE) or (
                             event.key == pg.K_ESCAPE):
                         i = 0
@@ -832,7 +830,6 @@ class Level_2(Level):
         """Функция готовит объекты игрового поля."""
         self.rocket = Rocket("Rocket.png",[100, 300])
         self.planets = []
-        self.dustclouds = []
         self.asteroids = []
         self.dv = 10
         self.objfinish = Finish("Earth.png",[550, 300])
