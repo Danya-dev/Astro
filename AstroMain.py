@@ -565,11 +565,15 @@ class Level():
         self.width = 30
         self.lenth_start_traject = 150
         gamegoes = True
+        pg.mouse.set_visible(False)
         while gamegoes:
             self.preparation(direction, filename)
             self.start(clock, events)
             gamegoes = self.process(clock, events)
+
+        pg.mouse.set_visible(True)
         return Menu(screen)      
+
             
             
     def preparation(self,direction, filename):
@@ -613,14 +617,19 @@ class Level():
         launchbool = False
         force = 50
         rocdirect = [1,0]
-        mouse_coord = self.rocket.coord
+        mouse_coord = self.rocket.coord0
         trajectory = False
         while not done: # Обработка событий.
-            clock.tick(30 )
+            clock.tick(30)
             screen.blit(space, screenpos)            
             for event in events.get():
                 if event.type == pg.QUIT:
                     done = True
+                elif event.type == pg.KEYDOWN: 
+                    if event.key == pg.K_p:
+                        prgo = True
+                        while prgo:
+                            prgo = self.preview(clock, events)
                 elif event.type == pg.MOUSEBUTTONDOWN :
                     if event.button == 1:                
                         launchbool = True  
@@ -638,11 +647,57 @@ class Level():
                     self.rocket.velocity[1] = force * rocdirect[1]                
             
             if trajectory:
-                self.rocket.trajectory(self.planets, self.lenth_start_traject)                 
-            self.drawthemall(self.rocket.image)
+                self.rocket.trajectory(self.planets, self.lenth_start_traject)   
+            x = - self.rocket.coord[0] + self.rocket.coord0[0] 
+            y = - self.rocket.coord[1] + self.rocket.coord0[1]
+            self.drawthemall(self.rocket.image, x, y)
             pg.display.flip()
         
-          
+        
+    def preview(self, clock, events):
+        """Функция предпросмотра уровня.""" 
+        done = False
+        (f1, f2, f3, f4) = (False, False, False, False)
+        (x, y) = (0, 0)
+        image = self.rocket.image
+        while not done: 
+            clock.tick(FPS)
+            screen.blit(space, screenpos)
+            for event in events.get():
+                if event.type == pg.QUIT:
+                    done = True
+                if event.type == pg.KEYDOWN: 
+                    if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
+                        f1 = True
+                    if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
+                        f2 = True
+                    if (event.key == pg.K_UP) or (event.key == pg.K_w):
+                        f3 = True
+                    if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
+                        f4 = True
+                    if event.key == pg.K_p:
+                        return False
+                elif event.type == pg.KEYUP: 
+                    if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
+                        f1 = False
+                    if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
+                        f2 = False
+                    if (event.key == pg.K_UP) or (event.key == pg.K_w):
+                        f3 = False
+                    if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
+                        f4 = False
+            if f1:
+                x += 1
+            if f2:
+                x -= 1
+            if f3:
+                y += 1
+            if f4:
+                y -= 1
+            self.drawthemall(image, x, y)
+            pg.display.flip()
+            
+            
     def process(self, clock, events):
         """Функция обрабатывает полет ракеты."""    
         done = False
@@ -675,45 +730,47 @@ class Level():
                                             event.key == pg.K_ESCAPE):
                                         i = 1  
                                         done = False
-                    elif event.key == pg.K_LEFT:
+                    elif (event.key == pg.K_LEFT) or (event.key == pg.K_a):
                         motion = LEFT
-                    elif event.key == pg.K_RIGHT:
+                    elif (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
                         motion = RIGHT
-                    elif event.key == pg.K_UP:
+                    elif (event.key == pg.K_UP) or (event.key == pg.K_w):
                         motion = UP
-                    elif event.key == pg.K_DOWN:
+                    elif (event.key == pg.K_DOWN) or (event.key == pg.K_s):
                         motion = DOWN
                 elif event.type == pg.KEYUP:
-                    if event.key in [pg.K_LEFT,
+
+                    if event.key in [pg.K_LEFT,pg.K_a,pg.K_d, pg.K_w, pg.K_s,
                                  pg.K_RIGHT, pg.K_DOWN, pg.K_UP]:
+                      
                         motion = STOP
-         
             image = self.rocket.activate(motion, self.dv)
+            x = - self.rocket.coord[0] + self.rocket.coord0[0] 
+            y = - self.rocket.coord[1] + self.rocket.coord0[1]
             self.rocket.gravity(self.planets)
             self.rocket.trajectory(self.planets, 150)
             self.movethemall()
-            self.drawthemall(image)
+            self.drawthemall(image, x, y)
             if self.oncollision():
                 return True
             if self.finish():
                 return False
+
             pg.display.flip()
        
         
-    def drawthemall(self, image):
+
+    def drawthemall(self, image, x, y):
         """Функция реализует отрисовку объектов игрового поля.
         Учитывает перемещение ракеты, чтобы она оставалась в определённом
         месте на экране.""" 
-        x = - self.rocket.coord[0] + self.rocket.coord0[0] 
-        """x прибавляется к координатам изображений
-        для создания эффекта движения камеры"""
-        y = - self.rocket.coord[1] + self.rocket.coord0[1]
+        
         for planet in self.planets:
             planet.draw(x, y)
         for asteroid in self.asteroids :
             asteroid.draw(x, y)
-        corner_cords = [self.rocket.coord0[0] - self.rocket.w/2,
-                        self.rocket.coord0[1] - self.rocket.h/2]
+        corner_cords = [x + self.rocket.coord[0] - self.rocket.w/2,
+                        y + self.rocket.coord[1] - self.rocket.h/2]
         self.rocket.draw(screen, image, corner_cords, self.rocket.angle)
         screen.blit(self.objfinish.image, self.objfinish.rect)
         self.objfinish.draw(x, y)
@@ -827,4 +884,3 @@ menu = Menu(screen)
 
 
 pg.quit()
-
