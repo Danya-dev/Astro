@@ -195,6 +195,7 @@ class Menu():
         
         
         def draw(self):
+            """Функция, отрисовывающая меню."""
             screen.blit(space, screenpos)
             if self.position == 1:
                 self.levels.draw()
@@ -221,27 +222,44 @@ class Menu():
         
         
 class DeveloperMode():
+    """Класс разработки уровней."""
     class GameObject():
+        """Класс игрового объекта, который размещает разработчик."""
         def __init__(self, image, name, objtype):
             self.image = image
+            """Изображение игрового объекта."""
+            
             self.name = name
+            """Имя игрового объекта."""
+            
             self.objtype = objtype
+            """Тип игрового объекта"""
+            
             self.w, self.h = self.image.get_size()
+            """Размеры изображения игрового объекта."""
             
             
     def __init__(self):
         self.planet1 = self.GameObject(
             pg.image.load(DIRECTION + "Planet1.png").convert_alpha(),
                                       'Planet1', 'planet')
+        """Добавление планеты первого типа."""
+        
         self.planet2 = self.GameObject(
             pg.image.load(DIRECTION + "Planet2.png").convert_alpha(),
                                       'Planet2', 'planet')
+        """Добавление планеты второго типа."""
+        
         self.finish = self.GameObject(
             pg.image.load(DIRECTION + "Earth.png").convert_alpha(),
                                       'finish' ,'finish')
+        """Добавление финиша."""
+        
         self.asteroid1 = self.GameObject(
             pg.image.load(DIRECTION + "Asteroid1.png").convert_alpha(),
                                          'Asteroid1', 'asteroid')
+        """Добавление астероида первого типа."""
+        
         self.asteroid2 = self.GameObject(
             pg.image.load(DIRECTION + "Asteroid2.png").convert_alpha(),
                                          'Asteroid2', 'asteroid')
@@ -250,34 +268,40 @@ class DeveloperMode():
                                       'rocket', 'rocket')
         self.delete = self.GameObject(
             pg.image.load(DIRECTION + "Rocket.png"), 'Delete', 'Delete')
+        """Добавление финиша."""
+        
         self.planetcash = []
+        """Лист добавляемых планет."""
+        
         self.rfcash = [(400, 300), (600,300)]
+        """Лист координат ракеты и финиша соответственно."""
+        
         self.asteroidscash = []
+        """Лист добавляемых астероидов."""
+        
         self.process(pg.event)
         
         
     def process(self,events):
+        """Функция"""
         done = False
-        gmobject = self.finish
-        workname = 'finish'
-        (f1, f2, f3, f4) = (False, False, False, False)
-        (dx, dy) = (0, 0)
+        gmobject = self.finish # Объект, с которым работает разработчик.  
+        workname = 'finish' # Тип объекта, с которым работает разработчик.
         while not done:
             clock.tick(30 )
             screen.blit(space, screenpos)            
             for event in events.get():
                 if event.type == pg.QUIT:
                     done = True
-        
                 elif event.type == pg.MOUSEBUTTONDOWN :  
                     if event.button == 1:                    
                         if gmobject.name == workname:
                             if workname == 'Delete':
                                 self.deleteobj(event)
                             else:   
-                                pos = [-dx, -dy]
-                                pos[0] += int( event.pos[0] - gmobject.w / 2)
-                                pos[1] += int(event.pos[1] - gmobject.h / 2)                               
+                                pos = [0, 0]
+                                pos[0] = int( event.pos[0] - gmobject.w / 2)
+                                pos[1] = int(event.pos[1] - gmobject.h / 2)                               
                                 self.cashing(gmobject, pos)
                 elif event.type == pg.KEYDOWN:
                     if event.key == pg.K_RETURN:
@@ -319,38 +343,8 @@ class DeveloperMode():
                         gmobject = self.delete
                         workname = self.delete.name
                         print(gmobject.name)
-                    if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
-                        f1 = True
-                        dx -=1
-                    if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
-                        f2 = True
-                        dx +=1
-                    if (event.key == pg.K_UP) or (event.key == pg.K_w):
-                        f3 = True
-                        dx -=1
-                    if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
-                        f4 = True
-                        dx +=1
-                elif event.type == pg.KEYUP: 
-                    if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
-                        f1 = False
-                    if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
-                        f2 = False
-                    if (event.key == pg.K_UP) or (event.key == pg.K_w):
-                        f3 = False
-                    if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
-                        f4 = False
-            if f1:
-                dx += 1
-            if f2:
-                dx -= 1
-            if f3:
-                dy += 1
-            if f4:
-                dy -= 1
-            self.draw(dx, dy)           
+            self.draw()           
             pg.display.flip()
-            
             
             
     def deleteobj(self, event):
@@ -385,18 +379,16 @@ class DeveloperMode():
 
             
             
-    def draw(self, dx, dy):
+    def draw(self):
         for planet in self.planetcash:
             screen.blit(pg.image.load(DIRECTION + planet[0] + '.png'),
-                        [planet[1][0] + dx, planet[1][1] + dy])
+                        planet[1])
           
         for asteroid in self.asteroidscash:
             screen.blit(pg.image.load(DIRECTION + asteroid[0] + '.png'),
-                        [asteroid[1][0] + dx, asteroid[1][1] + dy])
-        screen.blit(self.rocket.image, [self.rfcash[0][0] + dx,
-                                        self.rfcash[0][1] + dy])
-        screen.blit(self.finish.image, [self.rfcash[1][0] + dx,
-                                        self.rfcash[1][1] + dy])
+                        asteroid[1])
+        screen.blit(self.rocket.image, self.rfcash[0])
+        screen.blit(self.finish.image, self.rfcash[1])
         
             
     def constructor(self):
@@ -428,24 +420,49 @@ class Rocket(pg.sprite.Sprite):
     def __init__(self, filename, pos):
         pg.sprite.Sprite.__init__(self)
         self.image = pg.image.load(DIRECTION + filename).convert_alpha()
+        """Изображение ракеты."""
+        
         self.w , self.h = self.image.get_size()
+        """Ширина и высота изображения ракеты"""
+        
+        self.coord = pos
+        """Координаты на экране в пикселах."""
+        
         self.coord0 = [pos[0], pos[1]]
-        self.coord = pos # Координаты на экране в пикселах.
-        self.real_coord = [self.coord[0]*scale_param,  # Координаты в
-                           self.coord[1]*scale_param]  # пространстве. 
+        """Стартовые координаты в пикселах."""
+        
+        self.real_coord = [self.coord[0]*scale_param, 
+                           self.coord[1]*scale_param] 
+        """Координаты пространстве."""
+        
         self.rect = self.image.get_rect(center=(self.coord[0], self.coord[1]))
+        """Экземпляр класса Rect, ширина и высота которого совпадают
+        с таковыми у изображения ракеты."""
+        
         self.mask = pg.mask.from_surface(self.image)
+        """Маска ракеты."""
+        
         self.angle = 0
+        """Угол, наклона оси ракеты к оси x (ось x - направлена вправо)."""
+        
         self.velocity = [0,0]
-        self.cam = [0, 0]
+        """Скорость ракеты."""
+        
         self.upfire = pg.image.load(
             DIRECTION + "upfire1.png").convert_alpha()
+        """Изображение ракеты c включенным двигателем поворота направо."""
+        
         self.downfire = pg.image.load(
             DIRECTION + "downfire1.png").convert_alpha()
+        """Изображение ракеты c включенным двигателем поворота налево."""
+        
         self.fullfire = pg.image.load(
             DIRECTION + "fullfire1.png").convert_alpha()
+        """Изображение ракеты c включенными двигателеми тяги вперёд."""
+        
         self.frontfire = pg.image.load(
             DIRECTION + "frontfire1.png").convert_alpha()
+        """Изображение ракеты c включенными двигателеми тяги назад."""
     
     
     def motion(self):
