@@ -170,8 +170,9 @@ class Menu():
                                                 "circle")
             """Кнопка перехода к настройкам."""
             
-            self.back = botton.Botton(screen, [100, 100], 120, 40,
-                                       (0, 0, 0), "Назад")
+            self.back = botton.Botton_image(screen, [61, 100],
+                                       DIRECTION + "back.png",
+                                                "rect")
             """Кнопка подъёма на один уровень в меню."""
             
             self.position = 1  
@@ -231,9 +232,12 @@ class Menu():
                             elif self.level_4.click(event.pos): 
                                 return Level_4(clock, events,
                                                LEVELDIRECTION, 'level4.txt')
-                        else:   
-                            if self.back.click(event.pos):
-                                self.position = 1   
+                            elif self.back.click(event.pos):
+                                self.position = 1 
+                        elif self.position == 3 and self.back.click(
+                                event.pos):
+                            self.position = 1 
+                            
                     elif event.type == pg.KEYDOWN:
                         if self.position == 2 and event.key == pg.K_p:
                             return DeveloperMode()
@@ -253,8 +257,10 @@ class Menu():
                 self.level_2.draw()
                 self.level_3.draw()
                 self.level_4.draw()
+                self.back.draw()
             if self.position == 3:
                 self.sett.draw()
+                self.back.draw()
     
         
         def levels(self):
