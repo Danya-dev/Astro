@@ -50,11 +50,13 @@ class Botton_image():
         self.botton_form = botton_form
         
     def draw(self):
+        """Функция, отрисовывающая кнопку."""
         self.rect = self.image.get_rect(center=(self.coords[0], self.coords[1]))
         self.screen.blit(self.image, self.rect)
         
     
     def click(self, mouse_coord):
+        """Функция, регистрирующая нажатие на кнопку."""
         if self.botton_form == "circle":    
             if (mouse_coord[0] - self.coords[0])**2 + (mouse_coord[1] - self.coords[1])**2 <= self.rad**2:
                         return True
