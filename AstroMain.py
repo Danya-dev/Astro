@@ -760,8 +760,7 @@ class Level():
                                 elif event.type == pg.KEYDOWN:
                                     if event.key == pg.K_r:
                                         i = 1
-                                        done = False
-                                        Level_1(clock, events)
+                                        return True
                                     elif(event.key == pg.K_SPACE) or (
                                             event.key == pg.K_ESCAPE):
                                         i = 1  
