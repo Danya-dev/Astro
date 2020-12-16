@@ -272,10 +272,12 @@ class DeveloperMode():
                 elif event.type == pg.MOUSEBUTTONDOWN :  
                     if event.button == 1:                    
                         if gmobject.name == workname:
+                            pos = [-dx, -dy]
                             if workname == 'Delete':
-                                self.deleteobj(event)
+                                pos[0] += event.pos[0]
+                                pos[1] += event.pos[1]
+                                self.deleteobj(pos)
                             else:   
-                                pos = [-dx, -dy]
                                 pos[0] += int( event.pos[0] - gmobject.w / 2)
                                 pos[1] += int(event.pos[1] - gmobject.h / 2)                               
                                 self.cashing(gmobject, pos)
@@ -353,18 +355,18 @@ class DeveloperMode():
             
             
             
-    def deleteobj(self, event):
+    def deleteobj(self, pos):
         for gmobject in self.planetcash:
             x = gmobject[1][0]
             y = gmobject[1][1]
-            if (x < event.pos[0] < x + gmobject[2]) and (
-                    y < event.pos[1] < y + gmobject[3]):
+            if (x < pos[0] < x + gmobject[2]) and (
+                    y < pos[1] < y + gmobject[3]):
                 self.planetcash.remove(gmobject)
         for gmobject in self.asteroidscash:
             x = gmobject[1][0]
             y = gmobject[1][1]
-            if (x < event.pos[0] < x + gmobject[2]) and (
-                    y < event.pos[1] < y + gmobject[3]):
+            if (x < pos[0] < x + gmobject[2]) and (
+                    y < pos[1] < y + gmobject[3]):
                 self.asteroidscash.remove(gmobject)
                 
                 
