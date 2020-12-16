@@ -260,6 +260,8 @@ class DeveloperMode():
         done = False
         gmobject = self.finish
         workname = 'finish'
+        (f1, f2, f3, f4) = (False, False, False, False)
+        (dx, dy) = (0, 0)
         while not done:
             clock.tick(30 )
             screen.blit(space, screenpos)            
@@ -273,9 +275,9 @@ class DeveloperMode():
                             if workname == 'Delete':
                                 self.deleteobj(event)
                             else:   
-                                pos = [0, 0]
-                                pos[0] = int( event.pos[0] - gmobject.w / 2)
-                                pos[1] = int(event.pos[1] - gmobject.h / 2)                               
+                                pos = [-dx, -dy]
+                                pos[0] += int( event.pos[0] - gmobject.w / 2)
+                                pos[1] += int(event.pos[1] - gmobject.h / 2)                               
                                 self.cashing(gmobject, pos)
                 elif event.type == pg.KEYDOWN:
                     if event.key == pg.K_RETURN:
@@ -317,7 +319,36 @@ class DeveloperMode():
                         gmobject = self.delete
                         workname = self.delete.name
                         print(gmobject.name)
-            self.draw()           
+                    if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
+                        f1 = True
+                        dx -=1
+                    if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
+                        f2 = True
+                        dx +=1
+                    if (event.key == pg.K_UP) or (event.key == pg.K_w):
+                        f3 = True
+                        dx -=1
+                    if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
+                        f4 = True
+                        dx +=1
+                elif event.type == pg.KEYUP: 
+                    if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
+                        f1 = False
+                    if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
+                        f2 = False
+                    if (event.key == pg.K_UP) or (event.key == pg.K_w):
+                        f3 = False
+                    if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
+                        f4 = False
+            if f1:
+                dx += 1
+            if f2:
+                dx -= 1
+            if f3:
+                dy += 1
+            if f4:
+                dy -= 1
+            self.draw(dx, dy)           
             pg.display.flip()
             
             
@@ -354,16 +385,18 @@ class DeveloperMode():
 
             
             
-    def draw(self):
+    def draw(self, dx, dy):
         for planet in self.planetcash:
             screen.blit(pg.image.load(DIRECTION + planet[0] + '.png'),
-                        planet[1])
+                        [planet[1][0] + dx, planet[1][1] + dy])
           
         for asteroid in self.asteroidscash:
             screen.blit(pg.image.load(DIRECTION + asteroid[0] + '.png'),
-                        asteroid[1])
-        screen.blit(self.rocket.image, self.rfcash[0])
-        screen.blit(self.finish.image, self.rfcash[1])
+                        [asteroid[1][0] + dx, asteroid[1][1] + dy])
+        screen.blit(self.rocket.image, [self.rfcash[0][0] + dx,
+                                        self.rfcash[0][1] + dy])
+        screen.blit(self.finish.image, [self.rfcash[1][0] + dx,
+                                        self.rfcash[1][1] + dy])
         
             
     def constructor(self):
