@@ -639,10 +639,14 @@ class Level():
         print(line)
         while not(line == '\n'):
             name = line[0: len(line)-1]
+            if name == 'Planet1':
+                mass = 2 * 12E+28
+            if name == 'Planet2':
+                mass = 2 * 16E+28
             line = level.readline()
             print(line)
             self.planets.append(Planet(DIRECTION + name + '.png',
-                                stringhelper(line), 40, 8E+28))
+                                stringhelper(line), 40, mass))
             line = level.readline()
             print(line)            
         level.readline()
