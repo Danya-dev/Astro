@@ -5,11 +5,14 @@ import math
 pg.init()
 pg.font.init()
 
+
 SCREEN_SIZE = (800, 600)
+"""Размер игрового окна."""
+
 FPS_menu = 15
 FPS = 400
-dt = 100*5E+2
 
+dt = 100*5E+2
 """Шаг реального времени при одной иттерации цикла обработки событий игры.
 Тип: float
 Мера: секунды."""
@@ -18,19 +21,29 @@ scale_param = 5E+8
 """Масштабирование экранных координат по отношению к физическим.
 Тип: float
 Мера: количество пикселей на один метр."""
+
 RIGHT = "turn to the right"
 LEFT = "turn to the left"
 UP = "speed up"
 DOWN = "speed down"
 STOP = "not turn or speed-change"
+"""Переменные нажатия на кнопки управления ракетой."""
 
+screen = pg.display.set_mode(SCREEN_SIZE)
+"""Игровое окно."""
 
 DIRECTION = 'textures/'
+"""Путь к папке с текстурами."""
+
 LEVELDIRECTION = 'sketches/'
-canvas = pg.Surface(SCREEN_SIZE)
-window = pg.display.set_mode((SCREEN_SIZE))
+"""Путь к папке с файлами с информацией об уровнях."""
+
 space = pg.image.load(DIRECTION + "space5.png").convert_alpha()
+"""Фон игры."""
+
 screenpos = (0, 0)
+"""Координаты верхнего левого угла фона."""
+
 
 def stringhelper(s : str):
     """
@@ -144,39 +157,57 @@ def runge_kutta(coor, vel, planets):
 
 
 class Menu():
-        """Класс меню. Реализует отрисовку меню и функции меню."""
-        def __init__(self, screen):
-            self.screen = screen
-            self.levels = botton.Botton_image(self.screen, [90 , 513],
+        """Класс меню. Реализует отрисовку меню и функции меню.
+        """
+        def __init__(self):
+            self.levels = botton.Botton_image(screen, [90 , 513],
                                               DIRECTION + "play.png",
                                               "circle")
-            self.settings = botton.Botton_image(self.screen, [184 , 540], 
+            """Кнопка перехода к выбору уровня."""
+            
+            self.settings = botton.Botton_image(screen, [184 , 540], 
                                                 DIRECTION + "settings.png",
                                                 "circle")
-            self.back = botton.Botton(self.screen, [100, 100], 120, 40,
+            """Кнопка перехода к настройкам."""
+            
+            self.back = botton.Botton(screen, [100, 100], 120, 40,
                                        (0, 0, 0), "Назад")
+            """Кнопка подъёма на один уровень в меню."""
+            
             self.position = 1  
             """Позиция меню. 1 - главное, 2 - уровни, 3 - настройки,
             4 - переход к уровню."""
-            self.level_1 = botton.Botton_image(self.screen, [61, 486],
+            
+            self.level_1 = botton.Botton_image(screen, [61, 486],
                                                DIRECTION +  "level_1.png",
                                                "rect")
-            self.level_2 = botton.Botton_image(self.screen, [117 , 496],
+            """Кнопка перехода к первому уровню."""
+            
+            self.level_2 = botton.Botton_image(screen, [117 , 496],
                                                 DIRECTION + "level_2.png",
                                                 "rect")
-            self.level_3 = botton.Botton_image(self.screen, [173 , 496],
+            """Кнопка перехода ко второму уровню."""
+            
+            self.level_3 = botton.Botton_image(screen, [173 , 496],
                                                 DIRECTION + "level_3.png",
                                                 "rect")
-            self.level_4 = botton.Botton_image(self.screen, [229 , 496],
+            """Кнопка перехода к третьему уровню."""
+            
+            self.level_4 = botton.Botton_image(screen, [229 , 496],
                                                 DIRECTION + "level_4.png",
                                                 "rect")
-            self.sett = botton.Botton(self.screen, [160, 150], 240, 40,
+            """Кнопка перехода к четвёртому уровню."""
+            
+            self.sett = botton.Botton(screen, [160, 150], 240, 40,
                                          (0, 0, 0), "Всё уже настроено!")
+            """Информация в настройках."""
+            
             self.menufunc(clock, pg.event)
         
         
         def menufunc(self, clock, events):
-            """Функция, обрабатывающая события в режиме открытого меню."""
+            """Функция, обрабатывающая события в режиме открытого меню.
+            """
             done = False
             while not done:
                 clock.tick(FPS_menu)
@@ -211,7 +242,8 @@ class Menu():
         
         
         def draw(self):
-            """Функция, отрисовывающая меню."""
+            """Функция, отрисовывающая меню.
+            """
             screen.blit(space, screenpos)
             if self.position == 1:
                 self.levels.draw()
@@ -223,7 +255,6 @@ class Menu():
                 self.level_4.draw()
             if self.position == 3:
                 self.sett.draw()
-
     
         
         def levels(self):
@@ -239,9 +270,11 @@ class Menu():
         
         
 class DeveloperMode():
-    """Класс разработки уровней."""
+    """Класс разработки уровней.
+    """
     class GameObject():
-        """Класс игрового объекта, который размещает разработчик."""
+        """Класс игрового объекта, который размещает разработчик.
+        """
         def __init__(self, image, name, objtype):
             self.image = image
             """Изображение игрового объекта."""
@@ -304,7 +337,8 @@ class DeveloperMode():
         
         
     def process(self,events):
-        """Функция, регулирующая процесс разработки."""
+        """Функция, регулирующая процесс разработки.
+        """
         done = False
         gmobject = self.finish # Объект, с которым работает разработчик.  
         workname = 'finish' # Тип объекта, с которым работает разработчик.
@@ -405,7 +439,8 @@ class DeveloperMode():
                
     def deleteobj(self, pos):
         """Функция, которая удалаяет объект при нажатии на него 
-        в режиме delete."""
+        в режиме delete.
+        """
         for gmobject in self.planetcash:
             x = gmobject[1][0]
             y = gmobject[1][1]
@@ -422,7 +457,8 @@ class DeveloperMode():
                 
                 
     def cashing(self, gmobject, pos):
-        """Функция, которая фиксирует добавленный объект.""" 
+        """Функция, которая фиксирует добавленный объект.
+        """ 
         if gmobject.objtype == 'planet':
             self.planetcash.append([gmobject.name, pos,
                                     gmobject.w, gmobject.h ])
@@ -439,7 +475,8 @@ class DeveloperMode():
             
             
     def draw(self):
-        """Функция, которая отрисовывает добавленные объекты.""" 
+        """Функция, которая отрисовывает добавленные объекты.
+        """ 
         for planet in self.planetcash:
             screen.blit(pg.image.load(DIRECTION + planet[0] + '.png'),
                         planet[1])
@@ -451,7 +488,8 @@ class DeveloperMode():
         
             
     def constructor(self):
-        """Функция, которая записывает в файл информацию о созданном уровне.""" 
+        """Функция, которая записывает в файл информацию о созданном уровне.
+        """ 
         direction = 'sketches/'
         print('введите название уровня')
         name = input()
@@ -858,7 +896,7 @@ class Level():
             self.start(clock, events)
             gamegoes = self.process(clock, events)
         pg.mouse.set_visible(True) # Курсор делается видимым.
-        return Menu(screen)      
+        return Menu()      
 
             
     def preparation(self, direction, filename):
@@ -888,10 +926,15 @@ class Level():
         line = level.readline()
         while not(line == '\n'):
             name = line[0: len(line)-1]
+            if name == 'Planet1':
+                mass = 2 * 12E+28
+            if name == 'Planet2':
+                mass = 2 * 16E+28
             line = level.readline()
             self.planets.append(Planet(DIRECTION + name + '.png',
-                                stringhelper(line), 40, 8E+28))
-            line = level.readline()           
+                                stringhelper(line), 40, mass))
+            line = level.readline()
+            print(line)            
         level.readline()
         line = level.readline()
         while not(line == '\n'):
@@ -1190,6 +1233,7 @@ class Level():
         if self.objfinish.mask.overlap_area(self.rocket.mask, offset) > 0:
             return True
         
+        
 class Level_1(Level):
     """Класс 1 уровня. Регулирует действия программы после переходу к 3 уровню.
     Наследует методы класса Level.
@@ -1252,15 +1296,18 @@ class Level_3(Level):
         self.planets.append(
             Planet(DIRECTION + "Planet1.png", [500, 100], 40, 8E+28))
          
+        
 class Level_4(Level):
+    """Класс 4 уровня. Регулирует действия программы после переходу к 4 уровню.
+    Наследует методы класса Level."""
     def __init__(self, clock, events, direction, filename):
         super().__init__(clock, events, direction, filename)                          
      
-screen = pg.display.set_mode(SCREEN_SIZE)
+        
 pg.display.set_caption("Astro")
 
 clock = pg.time.Clock()
-menu = Menu(screen)    
+menu = Menu()    
 
 
 
