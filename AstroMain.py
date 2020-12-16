@@ -964,7 +964,9 @@ class Level():
                 if event.type == pg.QUIT:
                     done = True
                 elif event.type == pg.KEYDOWN: 
-                    if event.key == pg.K_p:
+                    if event.key == pg.K_ESCAPE:
+                        done = True
+                    elif event.key == pg.K_p:
                         prgo = True
                         while prgo:
                             prgo = self.preview(clock, events)
@@ -995,16 +997,26 @@ class Level():
         """Функция предпросмотра уровня.
         """
         done = False
+        
         (f1, f2, f3, f4) = (False, False, False, False)
+        """Лист переменных, указывающих на то, нажата ли определённая кнопка:
+            f1 - поворота налево, f2 - поворота направо,
+            f3 - ускорения вперёд, f4 - замедления."""        
+        
         (x, y) = (0, 0)
+        """Смещение камеры."""
+        
         image = self.rocket.image
+        
         while not done: 
             clock.tick(FPS)
             screen.blit(space, screenpos)
             for event in events.get():
                 if event.type == pg.QUIT:
                     done = True
-                if event.type == pg.KEYDOWN: 
+                if event.type == pg.KEYDOWN:
+                    if event.key == pg.K_ESCAPE:
+                        done = True
                     if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
                         f1 = True
                     if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
@@ -1040,8 +1052,16 @@ class Level():
         """Функция обрабатывает полет ракеты.
         """ 
         done = False
+        
         motion = STOP
+        """Переменная, указывающая на то, работают ли двигатели ракеты."""
+        
         (f1, f2, f3, f4, f5) = (False, False, False, False, True)
+        """Лист переменных, указывающих на то, нажата ли определённая кнопка:
+            f1 - поворота налево, f2 - поворота направо,
+            f3 - ускорения вперёд, f4 - замедления,
+            f5 - все кнопки не нажаты."""
+            
         while not done: # Обработка событий.
             clock.tick(FPS)
             screen.blit(space, screenpos)
@@ -1049,7 +1069,9 @@ class Level():
                 if event.type == pg.QUIT:
                     done = True
                 elif event.type == pg.KEYDOWN: 
-                    if event.key == pg.K_r:
+                    if event.key == pg.K_ESCAPE:
+                        done = True
+                    elif event.key == pg.K_r:
                         return True
                     elif (event.key == pg.K_SPACE) or (
                             event.key == pg.K_ESCAPE):
@@ -1308,7 +1330,6 @@ pg.display.set_caption("Astro")
 
 clock = pg.time.Clock()
 menu = Menu()    
-
 
 
 pg.quit()
