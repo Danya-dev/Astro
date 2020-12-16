@@ -224,11 +224,11 @@ class Menu():
                         elif self.position == 2:   
                             if self.level_1.click(event.pos):
                                 return Level_1(clock, events,
-                                               LEVELDIRECTION, 'level1.txt')
+                                               LEVELDIRECTION, 'level1.txt',30)
                             elif self.level_2.click(event.pos):
-                                return Level_2(clock, events, None, None)
+                                return Level_2(clock, events, LEVELDIRECTION, 'level2.txt',30)
                             elif self.level_3.click(event.pos): 
-                                return Level_3(clock, events, None, None)
+                                return Level_3(clock, events, None, None,20)
                             elif self.level_4.click(event.pos): 
                                 return Level_4(clock, events,
                                                LEVELDIRECTION, 'level4.txt')
@@ -237,7 +237,6 @@ class Menu():
                         elif self.position == 3 and self.back.click(
                                 event.pos):
                             self.position = 1 
-                            
                     elif event.type == pg.KEYDOWN:
                         if self.position == 2 and event.key == pg.K_p:
                             return DeveloperMode()
@@ -860,9 +859,10 @@ class Finish(pg.sprite.Sprite):
 
 
 class Level():
+
     """Класс уровня. Регулирует действия программы после переходу к уровню.
     """
-    def __init__(self, clock, events, direction, filename):
+    def __init__(self, clock, events, direction, filename, dv):
         """
         Инициализация уровня.
 
@@ -882,7 +882,7 @@ class Level():
 
         """
         
-        self.dv = 20
+        self.dv = dv
         """Модуль изменения скорости ракеты за один шаг времени при
         работе двигателей ракеты. Характеризует мощность двигателей
         ракеты на данном уровне."""
@@ -1272,40 +1272,23 @@ class Level_1(Level):
     """Класс 1 уровня. Регулирует действия программы после переходу к 3 уровню.
     Наследует методы класса Level.
     """
-    def __init__(self, clock, events, direction, filename):
-        super().__init__(clock, events, direction, filename)
+    def __init__(self, clock, events, direction, filename, dv):
+        super().__init__(clock, events, direction, filename, dv)
 
         
 class Level_2(Level):
     """Класс 2 уровня. Регулирует действия программы после переходу к 3 уровню.
     Наследует методы класса Level.
     """
-    def __init__(self, clock, events, direction, filename):
-        super().__init__(clock, events, direction, filename)
+    def __init__(self, clock, events, direction, filename, dv):
+        super().__init__(clock, events, direction, filename, dv)
         
-        
-    def preparation(self, direction, filename):
-        """Функция готовит объекты игрового поля.
-        """
-        self.rocket = Rocket("Rocket.png",[100, 300])
-        self.planets = []
-        self.asteroids = []
-        self.dv = 10
-        self.objfinish = Finish("Earth.png",[550, 300])
-        self.planets.append(
-            Planet(DIRECTION + "Planet2.png", [300, 300], 40, 8E+28))
-        self.asteroids.append(
-            Asteroid(DIRECTION + "Asteroid1.png", [100, 200], 40, 10))
-        self.asteroids.append(
-            Asteroid(DIRECTION + "Asteroid1.png", [500, 200], 40, 10))
-        self.asteroids.append(
-            Asteroid(DIRECTION + "Asteroid2.png", [400, 400], 40, 10))
         
 class Level_3(Level): 
     """Класс 3 уровня. Регулирует действия программы после переходу к 3 уровню.
     Наследует методы класса Level."""
-    def __init__(self, clock, events, direction, filename):
-        super().__init__(clock, events, direction, filename)
+    def __init__(self, clock, events, direction, filename, dv):
+        super().__init__(clock, events, direction, filename, dv)
         
         
     def preparation(self, direction, filename):
@@ -1334,8 +1317,8 @@ class Level_3(Level):
 class Level_4(Level):
     """Класс 4 уровня. Регулирует действия программы после переходу к 4 уровню.
     Наследует методы класса Level."""
-    def __init__(self, clock, events, direction, filename):
-        super().__init__(clock, events, direction, filename)                          
+    def __init__(self, clock, events, direction, filename, dv):
+        super().__init__(clock, events, direction, filename, dv)                          
      
         
 pg.display.set_caption("Astro")
