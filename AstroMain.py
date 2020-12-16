@@ -209,6 +209,7 @@ class Menu():
         def menufunc(self, clock, events):
             """Функция, обрабатывающая события в режиме открытого меню.
             """
+
             done = False
             while not done:
                 clock.tick(FPS_menu)
@@ -231,13 +232,14 @@ class Menu():
                                 return Level_3(clock, events, None, None,20)
                             elif self.level_4.click(event.pos): 
                                 return Level_4(clock, events,
-                                               LEVELDIRECTION, 'level4.txt')
+                                               LEVELDIRECTION, 'level4.txt',20)
                             elif self.back.click(event.pos):
                                 self.position = 1 
                         elif self.position == 3 and self.back.click(
                                 event.pos):
                             self.position = 1 
                     elif event.type == pg.KEYDOWN:
+                        
                         if self.position == 2 and event.key == pg.K_p:
                             return DeveloperMode()
                 pg.display.flip()
@@ -1324,6 +1326,8 @@ class Level_4(Level):
 pg.display.set_caption("Astro")
 
 clock = pg.time.Clock()
+pg.mixer.music.load('music1.mp3')
+pg.mixer.music.play(-1, 20)
 menu = Menu()    
 
 
