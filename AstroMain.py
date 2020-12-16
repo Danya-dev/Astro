@@ -282,7 +282,7 @@ class DeveloperMode():
                         self.constructor()
                         done = True
                     elif event.key == pg.K_p:
-                        gmobject.name = 'planet'
+                        workname = 'planet'
                         print(gmobject.name)
                     elif event.key == pg.K_f:
                         gmobject = self.finish
@@ -292,24 +292,24 @@ class DeveloperMode():
                         gmobject = self.rocket
                         workname = gmobject.name
                         print(gmobject.name)
-                    elif event.key == pg.K_a:
-                        gmobject.name = 'asteroid'
+                    elif event.key == pg.K_m:
+                        workname = 'asteroid'
                         print(gmobject.name)
                     elif event.key == pg.K_1:
-                        if gmobject.name == 'planet':
+                        if workname == 'planet':
                             gmobject = self.planet1
                             workname = self.planet1.name
                             print(gmobject.name)
-                        elif gmobject.name == 'asteroid':
+                        elif workname == 'asteroid':
                             gmobject = self.asteroid1
                             workname = self.asteroid1.name
                             print(gmobject.name)
                     elif event.key == pg.K_2:
-                        if gmobject.name == 'planet':
+                        if workname == 'planet':
                             gmobject = self.planet2
                             workname = self.planet2.name
                             print(gmobject.name)
-                        elif gmobject.name == 'asteroid':
+                        elif workname == 'asteroid':
                             gmobject = self.asteroid2
                             workname = self.asteroid2.name
                             print(gmobject.name)
@@ -324,12 +324,14 @@ class DeveloperMode():
             
     def deleteobj(self, event):
         for gmobject in self.planetcash:
-            x, y = gmobject[1]
+            x = gmobject[1][0]
+            y = gmobject[1][1]
             if (x < event.pos[0] < x + gmobject[2]) and (
                     y < event.pos[1] < y + gmobject[3]):
                 self.planetcash.remove(gmobject)
         for gmobject in self.asteroidscash:
-            x, y = gmobject[1]
+            x = gmobject[1][0]
+            y = gmobject[1][1]
             if (x < event.pos[0] < x + gmobject[2]) and (
                     y < event.pos[1] < y + gmobject[3]):
                 self.asteroidscash.remove(gmobject)
@@ -340,6 +342,7 @@ class DeveloperMode():
         if gmobject.objtype == 'planet':
             self.planetcash.append([gmobject.name, pos,
                                     gmobject.w, gmobject.h ])
+            print(self.planetcash[len(self.planetcash)-1])
         elif gmobject.objtype == 'finish':
             self.rfcash[1] = pos
         elif gmobject.objtype == 'rocket':
@@ -347,7 +350,7 @@ class DeveloperMode():
         elif gmobject.objtype == 'asteroid':
             self.asteroidscash.append([gmobject.name, pos,
                                        gmobject.w, gmobject.h])
-            self.asteroidscash.append([gmobject.name, pos])
+        print( self.planetcash)
 
             
             
