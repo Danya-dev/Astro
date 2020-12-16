@@ -132,7 +132,6 @@ def runge_kutta(coor, vel, planets):
 def rotation(surface):
     return pg.transform.rotate(surface, 1)
 
-
 class Menu():
         """Класс меню. Реализует отрисовку меню и функции меню."""
         def __init__(self, screen):
@@ -148,14 +147,17 @@ class Menu():
             self.position = 1  
             """Позиция меню. 1 - главное, 2 - уровни, 3 - настройки,
             4 - переход к уровню."""
-            self.level_1 = botton.Botton_image(self.screen, [61, 487],
+            self.level_1 = botton.Botton_image(self.screen, [61, 486],
                                                DIRECTION +  "level_1.png",
                                                "rect")
-            self.level_2 = botton.Botton_image(self.screen, [117 , 495],
+            self.level_2 = botton.Botton_image(self.screen, [117 , 496],
                                                 DIRECTION + "level_2.png",
                                                 "rect")
             self.level_3 = botton.Botton_image(self.screen, [173 , 496],
                                                 DIRECTION + "level_3.png",
+                                                "rect")
+            self.level_4 = botton.Botton_image(self.screen, [229 , 496],
+                                                DIRECTION + "level_4.png",
                                                 "rect")
             self.sett = botton.Botton(self.screen, [160, 150], 240, 40,
                                          (0, 0, 0), "Всё уже настроено!")
@@ -184,6 +186,9 @@ class Menu():
                                 return Level_2(clock, events, None, None)
                             elif self.level_3.click(event.pos): 
                                 return Level_3(clock, events, None, None)
+                            elif self.level_4.click(event.pos): 
+                                return Level_4(clock, events,
+                                               LEVELDIRECTION, 'level4.txt')
                         else:   
                             if self.back.click(event.pos):
                                 self.position = 1   
@@ -203,6 +208,7 @@ class Menu():
                 self.level_1.draw()
                 self.level_2.draw()
                 self.level_3.draw()
+                self.level_4.draw()
             if self.position == 3:
                 self.sett.draw()
 
@@ -253,15 +259,17 @@ class DeveloperMode():
         self.planetcash = []
         self.rfcash = [(400, 300), (600,300)]
         self.asteroidscash = []
-        self.process(pg.time.Clock(), pg.event)
+        self.process(pg.event)
         
         
-    def process(self, clock, events):
+    def process(self,events):
         done = False
         gmobject = self.finish
         workname = 'finish'
+        (f1, f2, f3, f4) = (False, False, False, False)
+        (dx, dy) = (0, 0)
         while not done:
-            clock.tick(30)
+            clock.tick(30 )
             screen.blit(space, screenpos)            
             for event in events.get():
                 if event.type == pg.QUIT:
@@ -270,21 +278,19 @@ class DeveloperMode():
                 elif event.type == pg.MOUSEBUTTONDOWN :  
                     if event.button == 1:                    
                         if gmobject.name == workname:
+                            pos = [-dx, -dy]
                             if workname == 'Delete':
-                                self.deleteobj(event)
+                                pos[0] += event.pos[0]
+                                pos[1] += event.pos[1]
+                                self.deleteobj(pos)
                             else:   
-                                pos = [0, 0]
-                                pos[0] = int( event.pos[0] - gmobject.w / 2)
-                                pos[1] = int(event.pos[1] - gmobject.h / 2)                               
+                                pos[0] += int( event.pos[0] - gmobject.w / 2)
+                                pos[1] += int(event.pos[1] - gmobject.h / 2)                               
                                 self.cashing(gmobject, pos)
                 elif event.type == pg.KEYDOWN:
                     if event.key == pg.K_RETURN:
                         self.constructor()
                         done = True
-                    elif event.key == pg.K_o:
-                        prgo = True
-                        while prgo:
-                            prgo = self.preview(clock, events)
                     elif event.key == pg.K_p:
                         workname = 'planet'
                         print(gmobject.name)
@@ -321,23 +327,52 @@ class DeveloperMode():
                         gmobject = self.delete
                         workname = self.delete.name
                         print(gmobject.name)
-            self.draw()           
+                    if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
+                        f1 = True
+                        dx -= 5
+                    if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
+                        f2 = True
+                        dx += 5
+                    if (event.key == pg.K_UP) or (event.key == pg.K_w):
+                        f3 = True
+                        dx -= 5
+                    if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
+                        f4 = True
+                        dx += 5 
+                elif event.type == pg.KEYUP: 
+                    if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
+                        f1 = False
+                    if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
+                        f2 = False
+                    if (event.key == pg.K_UP) or (event.key == pg.K_w):
+                        f3 = False
+                    if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
+                        f4 = False
+            if f1:
+                dx += 5
+            if f2:
+                dx -= 5
+            if f3:
+                dy += 5
+            if f4:
+                dy -= 5
+            self.draw(dx, dy)           
             pg.display.flip()
             
             
             
-    def deleteobj(self, event):
+    def deleteobj(self, pos):
         for gmobject in self.planetcash:
             x = gmobject[1][0]
             y = gmobject[1][1]
-            if (x < event.pos[0] < x + gmobject[2]) and (
-                    y < event.pos[1] < y + gmobject[3]):
+            if (x < pos[0] < x + gmobject[2]) and (
+                    y < pos[1] < y + gmobject[3]):
                 self.planetcash.remove(gmobject)
         for gmobject in self.asteroidscash:
             x = gmobject[1][0]
             y = gmobject[1][1]
-            if (x < event.pos[0] < x + gmobject[2]) and (
-                    y < event.pos[1] < y + gmobject[3]):
+            if (x < pos[0] < x + gmobject[2]) and (
+                    y < pos[1] < y + gmobject[3]):
                 self.asteroidscash.remove(gmobject)
                 
                 
@@ -358,16 +393,18 @@ class DeveloperMode():
 
             
             
-    def draw(self):
+    def draw(self, dx, dy):
         for planet in self.planetcash:
             screen.blit(pg.image.load(DIRECTION + planet[0] + '.png'),
-                        planet[1])
+                        [planet[1][0] + dx, planet[1][1] + dy])
           
         for asteroid in self.asteroidscash:
             screen.blit(pg.image.load(DIRECTION + asteroid[0] + '.png'),
-                        asteroid[1])
-        screen.blit(self.rocket.image, self.rfcash[0])
-        screen.blit(self.finish.image, self.rfcash[1])
+                        [asteroid[1][0] + dx, asteroid[1][1] + dy])
+        screen.blit(self.rocket.image, [self.rfcash[0][0] + dx,
+                                        self.rfcash[0][1] + dy])
+        screen.blit(self.finish.image, [self.rfcash[1][0] + dx,
+                                        self.rfcash[1][1] + dy])
         
             
     def constructor(self):
@@ -581,7 +618,7 @@ class Level():
 
             
             
-    def preparation(self,direction, filename):
+    def preparation(self, direction, filename):
         """Функция готовит объекты игрового поля."""
         self.planets = []
         self.asteroids = []
@@ -633,7 +670,7 @@ class Level():
                 if event.type == pg.QUIT:
                     done = True
                 elif event.type == pg.KEYDOWN: 
-                    if event.key == pg.K_o:
+                    if event.key == pg.K_p:
                         prgo = True
                         while prgo:
                             prgo = self.preview(clock, events)
@@ -674,9 +711,6 @@ class Level():
                 if event.type == pg.QUIT:
                     done = True
                 if event.type == pg.KEYDOWN: 
-                    if (event.key == pg.K_o):
-                        done = True
-                        return(False)
                     if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
                         f1 = True
                     if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
@@ -705,13 +739,14 @@ class Level():
             if f4:
                 y -= 1
             self.drawthemall(image, x, y)
-            # pg.display.flip()
+            pg.display.flip()
             
             
     def process(self, clock, events):
         """Функция обрабатывает полет ракеты."""    
         done = False
         motion = STOP
+        (f1, f2, f3, f4, f5) = (False, False, False, False, True)
         while not done: # Обработка событий.
             clock.tick(FPS)
             screen.blit(space, screenpos)
@@ -738,33 +773,107 @@ class Level():
                                             event.key == pg.K_ESCAPE):
                                         i = 1  
                                         done = False
-                    elif (event.key == pg.K_LEFT) or (event.key == pg.K_a):
-                        motion = LEFT
-                    elif (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
-                        motion = RIGHT
-                    elif (event.key == pg.K_UP) or (event.key == pg.K_w):
-                        motion = UP
-                    elif (event.key == pg.K_DOWN) or (event.key == pg.K_s):
-                        motion = DOWN
-                elif event.type == pg.KEYUP:
+                                        
+                    if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
+                        f1 = True
+                    if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
+                        f2 = True
+                    if (event.key == pg.K_UP) or (event.key == pg.K_w):
+                        f3 = True
+                    if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
+                        f4 = True
 
-                    if event.key in [pg.K_LEFT,pg.K_a,pg.K_d, pg.K_w, pg.K_s,
-                                 pg.K_RIGHT, pg.K_DOWN, pg.K_UP]:
-                      
-                        motion = STOP
-            image = self.rocket.activate(motion, self.dv)
-            x = - self.rocket.coord[0] + self.rocket.coord0[0] 
-            y = - self.rocket.coord[1] + self.rocket.coord0[1]
-            self.rocket.gravity(self.planets)
-            self.rocket.trajectory(self.planets, 150)
-            self.movethemall()
-            self.drawthemall(image, x, y)
-            if self.oncollision():
-                return True
-            if self.finish():
-                return False
+                    
 
-            pg.display.flip()
+                        
+                elif event.type == pg.KEYUP: 
+                    if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
+                        f1 = False
+                    if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
+                        f2 = False
+                    if (event.key == pg.K_UP) or (event.key == pg.K_w):
+                        f3 = False
+                    if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
+                        f4 = False
+              
+            if f1:
+                motion = LEFT
+                image = self.rocket.activate(motion, self.dv)
+                x = - self.rocket.coord[0] + self.rocket.coord0[0] 
+                y = - self.rocket.coord[1] + self.rocket.coord0[1]
+                self.rocket.gravity(self.planets)
+                self.rocket.trajectory(self.planets, 150)
+                self.movethemall()
+                self.drawthemall(image, x, y)
+                if self.oncollision():
+                    return True
+                if self.finish():
+                    return False
+
+                pg.display.flip()
+                
+            if f2:
+                motion = RIGHT
+                image = self.rocket.activate(motion, self.dv)
+                x = - self.rocket.coord[0] + self.rocket.coord0[0] 
+                y = - self.rocket.coord[1] + self.rocket.coord0[1]
+                self.rocket.gravity(self.planets)
+                self.rocket.trajectory(self.planets, 150)
+                self.movethemall()
+                self.drawthemall(image, x, y)
+                if self.oncollision():
+                    return True
+                if self.finish():
+                    return False
+
+                pg.display.flip()
+            if f3:
+                motion = UP
+                image = self.rocket.activate(motion, self.dv)
+                x = - self.rocket.coord[0] + self.rocket.coord0[0] 
+                y = - self.rocket.coord[1] + self.rocket.coord0[1]
+                self.rocket.gravity(self.planets)
+                self.rocket.trajectory(self.planets, 150)
+                self.movethemall()
+                self.drawthemall(image, x, y)
+                if self.oncollision():
+                    return True
+                if self.finish():
+                    return False
+
+                pg.display.flip()
+            if f4:
+                motion = DOWN
+                image = self.rocket.activate(motion, self.dv)
+                x = - self.rocket.coord[0] + self.rocket.coord0[0] 
+                y = - self.rocket.coord[1] + self.rocket.coord0[1]
+                self.rocket.gravity(self.planets)
+                self.rocket.trajectory(self.planets, 150)
+                self.movethemall()
+                self.drawthemall(image, x, y)
+                if self.oncollision():
+                    return True
+                if self.finish():
+                    return False
+
+                pg.display.flip()
+            if f5:
+                motion = STOP
+                image = self.rocket.activate(motion, self.dv)
+                x = - self.rocket.coord[0] + self.rocket.coord0[0] 
+                y = - self.rocket.coord[1] + self.rocket.coord0[1]
+                self.rocket.gravity(self.planets)
+                self.rocket.trajectory(self.planets, 150)
+                self.movethemall()
+                self.drawthemall(image, x, y)
+                if self.oncollision():
+                    return True
+                if self.finish():
+                    return False
+
+                pg.display.flip()
+
+            
        
         
 
@@ -880,7 +989,10 @@ class Level_3(Level):
             Asteroid(DIRECTION + "Asteroids.png", [150, 450], 40, 10))
         self.planets.append(
             Planet(DIRECTION + "Planet1.png", [500, 100], 40, 8E+28))
-                                    
+         
+class Level_4(Level):
+    def __init__(self, clock, events, direction, filename):
+        super().__init__(clock, events, direction, filename)                          
      
 screen = pg.display.set_mode(SCREEN_SIZE)
 pg.display.set_caption("Astro")
