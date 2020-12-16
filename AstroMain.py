@@ -160,12 +160,12 @@ class Menu():
         """Класс меню. Реализует отрисовку меню и функции меню.
         """
         def __init__(self):
-            self.levels = botton.Botton_image(screen, [90 , 513],
+            self.levels = botton.Botton_image(screen, [90, 513],
                                               DIRECTION + "play.png",
                                               "circle")
             """Кнопка перехода к выбору уровня."""
             
-            self.settings = botton.Botton_image(screen, [184 , 540], 
+            self.settings = botton.Botton_image(screen, [184, 540], 
                                                 DIRECTION + "settings.png",
                                                 "circle")
             """Кнопка перехода к настройкам."""
@@ -323,7 +323,7 @@ class DeveloperMode():
         self.planetcash = []
         """Лист добавляемых планет."""
         
-        self.rfcash = [(400, 300), (600,300)]
+        self.rfcash = [(400, 300), (600, 300)]
         """Лист координат ракеты и финиша соответственно."""
         
         self.asteroidscash = []
@@ -354,8 +354,8 @@ class DeveloperMode():
                                 pos[1] += event.pos[1]
                                 self.deleteobj(pos)
                             else:   
-                                pos[0] += int( event.pos[0] - gmobject.w / 2)
-                                pos[1] += int(event.pos[1] - gmobject.h / 2)                               
+                                pos[0] += int( event.pos[0] - gmobject.w/2)
+                                pos[1] += int(event.pos[1] - gmobject.h/2)                               
                                 self.cashing(gmobject, pos)
                 elif event.type == pg.KEYDOWN:
                     if event.key == pg.K_RETURN:
@@ -399,7 +399,6 @@ class DeveloperMode():
                         print(gmobject.name)
                     if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
                         f1 = True
-
                         dx -= 5
                     if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
                         f2 = True
@@ -410,7 +409,6 @@ class DeveloperMode():
                     if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
                         f4 = True
                         dx += 5 
-
                 elif event.type == pg.KEYUP: 
                     if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
                         f1 = False
@@ -421,7 +419,6 @@ class DeveloperMode():
                     if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
                         f4 = False
             if f1:
-
                 dx += 5
             if f2:
                 dx -= 5
@@ -451,13 +448,12 @@ class DeveloperMode():
                 self.asteroidscash.remove(gmobject)
                 
                 
-                
     def cashing(self, gmobject, pos):
         """Функция, которая фиксирует добавленный объект.
         """ 
         if gmobject.objtype == 'planet':
             self.planetcash.append([gmobject.name, pos,
-                                    gmobject.w, gmobject.h ])
+                                    gmobject.w, gmobject.h])
             print(self.planetcash[len(self.planetcash)-1])
         elif gmobject.objtype == 'finish':
             self.rfcash[1] = pos
@@ -808,7 +804,6 @@ class Asteroid(pg.sprite.Sprite):
         screen.blit(self.image, self.rect)
         
         
-        
 class Finish(pg.sprite.Sprite):
     """Класс объекта-финиша."""
     def __init__(self, filename, pos):
@@ -887,12 +882,12 @@ class Level():
         True, и на то, что игровой процесс завершён, если её значение
         False."""
         
-        pg.mouse.set_visible(False) # Сокрытие курсора.
         while gamegoes:
             self.preparation(direction, filename)
             self.start(clock, events)
+            pg.mouse.set_visible(False) # Сокрытие курсора.
             gamegoes = self.process(clock, events)
-        pg.mouse.set_visible(True) # Курсор делается видимым.
+            pg.mouse.set_visible(True) # Курсор делается видимым.
         return Menu()      
 
             
@@ -1090,8 +1085,7 @@ class Level():
                                         return True
                                     elif event.key == pg.K_SPACE:
                                         i = 1  
-                                        done = False
-                                        
+                                        done = False                
                     if event.type == pg.QUIT:
                         done = True
                     else:                     
@@ -1103,7 +1097,6 @@ class Level():
                             f3 = True
                         if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
                             f4 = True
-
                 elif event.type == pg.KEYUP: 
                     if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
                         f1 = False
@@ -1113,7 +1106,6 @@ class Level():
                         f3 = False
                     if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
                         f4 = False
-              
             if f1:
                 motion = LEFT
                 image = self.rocket.activate(motion, self.dv)
@@ -1128,7 +1120,6 @@ class Level():
                 if self.finish():
                     return False
                 pg.display.flip()
-                
             if f2:
                 motion = RIGHT
                 image = self.rocket.activate(motion, self.dv)
@@ -1142,8 +1133,7 @@ class Level():
                     return True
                 if self.finish():
                     return False
-                pg.display.flip()
-                
+                pg.display.flip() 
             if f3:
                 motion = UP
                 image = self.rocket.activate(motion, self.dv)
@@ -1158,7 +1148,6 @@ class Level():
                 if self.finish():
                     return False
                 pg.display.flip()
-                
             if f4:
                 motion = DOWN
                 image = self.rocket.activate(motion, self.dv)
@@ -1172,8 +1161,7 @@ class Level():
                     return True
                 if self.finish():
                     return False
-                pg.display.flip()
-                
+                pg.display.flip() 
             if f5:
                 motion = STOP
                 image = self.rocket.activate(motion, self.dv)
@@ -1318,6 +1306,5 @@ pg.display.set_caption("Astro")
 
 clock = pg.time.Clock()
 menu = Menu()    
-
 
 pg.quit()
