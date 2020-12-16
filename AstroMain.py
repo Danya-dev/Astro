@@ -930,8 +930,7 @@ class Level():
             line = level.readline()
             self.planets.append(Planet(DIRECTION + name + '.png',
                                 stringhelper(line), 40, mass))
-            line = level.readline()
-            print(line)            
+            line = level.readline()            
         level.readline()
         line = level.readline()
         while not(line == '\n'):
@@ -1093,14 +1092,17 @@ class Level():
                                         i = 1  
                                         done = False
                                         
-                    if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
-                        f1 = True
-                    if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
-                        f2 = True
-                    if (event.key == pg.K_UP) or (event.key == pg.K_w):
-                        f3 = True
-                    if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
-                        f4 = True
+                    if event.type == pg.QUIT:
+                        done = True
+                    else:                     
+                        if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
+                            f1 = True
+                        if (event.key == pg.K_RIGHT) or (event.key == pg.K_d):
+                            f2 = True
+                        if (event.key == pg.K_UP) or (event.key == pg.K_w):
+                            f3 = True
+                        if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
+                            f4 = True
 
                 elif event.type == pg.KEYUP: 
                     if (event.key == pg.K_LEFT) or (event.key == pg.K_a):
