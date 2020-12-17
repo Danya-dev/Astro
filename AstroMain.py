@@ -199,7 +199,7 @@ class Menu():
                                                 "rect")
             """Кнопка перехода к четвёртому уровню."""
             
-            self.sett = botton.Botton(screen, [160, 150], 240, 40,
+            self.sett = botton.Botton(screen, [160, 250], 240, 40,
                                          (0, 0, 0), "Всё уже настроено!")
             """Информация в настройках."""
             
@@ -231,15 +231,11 @@ class Menu():
                                 return Level_2(clock, events, LEVELDIRECTION,
                                                'level2.txt', 30)
                             elif self.level_3.click(event.pos): 
-                                return Level_3(clock, events, None, None, 20)
+                                return Level_3(clock, events, LEVELDIRECTION,
+                                               'level5.txt', 20)
                             elif self.level_4.click(event.pos): 
                                 return Level_4(clock, events,
-<<<<<<< HEAD
                                                LEVELDIRECTION, 'level4.txt',20)
-=======
-                                               LEVELDIRECTION, 'level4.txt',
-                                               30)
->>>>>>> 362aefe40be57e18ef5fb3c21859b4118de3e14f
                             elif self.back.click(event.pos):
                                 self.position = 1 
                         elif self.position == 3 and self.back.click(
@@ -342,6 +338,7 @@ class DeveloperMode():
         """Функция, регулирующая процесс разработки.
         """
         done = False
+        (f1, f2, f3, f4) = (False, False, False, False)
         gmobject = self.finish # Объект, с которым работает разработчик.  
         workname = 'finish' # Тип объекта, с которым работает разработчик.
         (dx, dy) = (0, 0) # Смещение камеры.
@@ -460,7 +457,6 @@ class DeveloperMode():
         if gmobject.objtype == 'planet':
             self.planetcash.append([gmobject.name, pos,
                                     gmobject.w, gmobject.h])
-            print(self.planetcash[len(self.planetcash)-1])
         elif gmobject.objtype == 'finish':
             self.rfcash[1] = pos
         elif gmobject.objtype == 'rocket':
@@ -468,11 +464,11 @@ class DeveloperMode():
         elif gmobject.objtype == 'asteroid':
             self.asteroidscash.append([gmobject.name, pos,
                                        gmobject.w, gmobject.h])
-        print( self.planetcash)
+
 
             
             
-    def draw(self):
+    def draw(self, dx, dy):
         """Функция, которая отрисовывает добавленные объекты.
         """ 
         for planet in self.planetcash:
@@ -1277,29 +1273,7 @@ class Level_3(Level):
     def __init__(self, clock, events, direction, filename, dv):
         super().__init__(clock, events, direction, filename, dv)
         
-        
-    def preparation(self, direction, filename):
-        """Функция готовит объекты игрового поля."""
-        self.rocket = Rocket("Rocket.png", [100, 300])
-        self.planets = []
-        self.dustclouds = []
-        self.asteroids = []
-        self.dv = 5
-        self.lenth_start_traject = 350        
-        self.objfinish = Finish("Earth.png",[550, 400])
-        self.planets.append(
-            Planet(DIRECTION + "Planet2.png", [300, 300], 40, 16E+28))
-        self.asteroids.append(
-            Asteroid(DIRECTION + "Asteroid1.png", [100, 200], 40, 10))
-        self.asteroids.append(
-            Asteroid(DIRECTION + "Asteroid1.png", [500, 200], 40, 10))
-        self.asteroids.append(
-            Asteroid(DIRECTION + "Asteroid2.png", [400, 400], 40, 10))
-        self.asteroids.append(
-            Asteroid(DIRECTION + "Asteroids.png", [150, 450], 40, 10))
-        self.planets.append(
-            Planet(DIRECTION + "Planet1.png", [500, 100], 40, 8E+28))
-         
+                 
         
 class Level_4(Level):
     """Класс 4 уровня. Регулирует действия программы после переходу к 4 уровню.
