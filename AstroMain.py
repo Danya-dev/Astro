@@ -64,6 +64,7 @@ def stringhelper(s : str):
     number1, coma, number2 = s.partition(',')
     return [int(number1), int(number2)]  
   
+    
 def runge_kutta(coor, vel, planets):
     """
     Функция, реализующая расчёт движения в гравитационном поле с помощью
@@ -153,6 +154,7 @@ def runge_kutta(coor, vel, planets):
     coor[1] += (k1[1] + 2*k2[1] + 2*k3[1] + k4[1])*dt / 6
     vel[0] += (k1[2] + 2*k2[2] + 2*k3[2] + k4[2])*dt / 6
     vel[1] += (k1[3] + 2*k2[3] + 2*k3[3] + k4[3])*dt / 6
+    
     return coor, vel
 
 
@@ -469,9 +471,7 @@ class DeveloperMode():
             self.asteroidscash.append([gmobject.name, pos,
                                        gmobject.w, gmobject.h])
 
-
-            
-            
+                        
     def draw(self, dx, dy):
         """Функция, которая отрисовывает добавленные объекты.
         """ 
@@ -512,7 +512,8 @@ class DeveloperMode():
 
         
 class Rocket(pg.sprite.Sprite):
-    """Класс ракеты."""
+    """Класс ракеты.
+    """
     def __init__(self, filename, pos):
         pg.sprite.Sprite.__init__(self)
         
@@ -720,7 +721,8 @@ class Rocket(pg.sprite.Sprite):
 
         
 class Planet(pg.sprite.Sprite): 
-    """Класс планет."""
+    """Класс планет.
+    """
     def __init__(self, filename, pos, rad, mass):
         pg.sprite.Sprite.__init__(self)
         
@@ -766,7 +768,8 @@ class Planet(pg.sprite.Sprite):
         
         
 class Asteroid(pg.sprite.Sprite):
-    """Класс астероидов."""
+    """Класс астероидов.
+    """
     def __init__(self, filename, pos, rad, mass):
         pg.sprite.Sprite.__init__(self)
         
@@ -811,7 +814,8 @@ class Asteroid(pg.sprite.Sprite):
         
         
 class Finish(pg.sprite.Sprite):
-    """Класс объекта-финиша."""
+    """Класс объекта-финиша.
+    """
     def __init__(self, filename, pos):
         pg.sprite.Sprite.__init__(self)
         
@@ -851,7 +855,6 @@ class Finish(pg.sprite.Sprite):
 
 
 class Level():
-
     """Класс уровня. Регулирует действия программы после переходу к уровню.
     """
     def __init__(self, clock, events, direction, filename, dv):
@@ -870,7 +873,7 @@ class Level():
         Returns
         -------
         Menu
-            Возвращает выход в меню.
+            Возвращает выход в меню после окончания игры.
 
         """
         
@@ -888,10 +891,10 @@ class Level():
         True, и на то, что игровой процесс завершён, если её значение
         False."""
         
+        pg.mouse.set_visible(False) # Сокрытие курсора.
         while gamegoes:
             self.preparation(direction, filename)
             self.start(clock, events)
-            pg.mouse.set_visible(False) # Сокрытие курсора.
             gamegoes = self.process(clock, events)
         pg.mouse.set_visible(True) # Курсор делается видимым.
         return Menu()      
@@ -1041,6 +1044,7 @@ class Level():
                         f3 = False
                     if (event.key == pg.K_DOWN) or (event.key == pg.K_s):
                         f4 = False
+            
             if f1:
                 x += 1
             if f2:
@@ -1091,7 +1095,10 @@ class Level():
                                         return True
                                     elif event.key == pg.K_SPACE:
                                         i = 1  
-                                        done = False                
+                                        done = False
+                                    elif event.key == pg.K_ESCAPE:
+                                        done = True
+                                        i = 1
                     if event.type == pg.QUIT:
                         done = True
                     else:                     
@@ -1274,14 +1281,16 @@ class Level_2(Level):
         
 class Level_3(Level): 
     """Класс 3 уровня. Регулирует действия программы после переходу к 3 уровню.
-    Наследует методы класса Level."""
+    Наследует методы класса Level.
+    """
     def __init__(self, clock, events, direction, filename, dv):
         super().__init__(clock, events, direction, filename, dv)
-        
-                 
+
+
 class Level_4(Level):
     """Класс 4 уровня. Регулирует действия программы после переходу к 4 уровню.
-    Наследует методы класса Level."""
+    Наследует методы класса Level.
+    """
     def __init__(self, clock, events, direction, filename, dv):
         super().__init__(clock, events, direction, filename, dv)                          
      
