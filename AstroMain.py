@@ -882,12 +882,12 @@ class Level():
         True, и на то, что игровой процесс завершён, если её значение
         False."""
         
+        pg.mouse.set_visible(False) # Сокрытие курсора.
         while gamegoes:
             self.preparation(direction, filename)
             self.start(clock, events)
-            pg.mouse.set_visible(False) # Сокрытие курсора.
             gamegoes = self.process(clock, events)
-            pg.mouse.set_visible(True) # Курсор делается видимым.
+        pg.mouse.set_visible(True) # Курсор делается видимым.
         return Menu()      
 
             
@@ -1085,7 +1085,10 @@ class Level():
                                         return True
                                     elif event.key == pg.K_SPACE:
                                         i = 1  
-                                        done = False                
+                                        done = False
+                                    elif event.key == pg.K_ESCAPE:
+                                        done = True
+                                        i = 1
                     if event.type == pg.QUIT:
                         done = True
                     else:                     
