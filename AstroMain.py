@@ -165,11 +165,12 @@ class Menu():
                                               "circle")
             """Кнопка перехода к выбору уровня."""
             
+
             self.settings = botton.Botton_image(screen, [184, 540], 
                                                 DIRECTION + "settings.png",
                                                 "circle")
             """Кнопка перехода к настройкам."""
-            
+           
             self.back = botton.Botton_image(screen, [61, 495],
                                        DIRECTION + "back.png",
                                                 "rect")
@@ -228,14 +229,17 @@ class Menu():
                                                LEVELDIRECTION,
                                                'level1.txt', 30)
                             elif self.level_2.click(event.pos):
-                                return Level_2(clock, events, LEVELDIRECTION,
+                                return Level_2(clock, events,
+                                               LEVELDIRECTION,
                                                'level2.txt', 30)
                             elif self.level_3.click(event.pos): 
-                                return Level_3(clock, events, LEVELDIRECTION,
+                                return Level_3(clock, events,
+                                               LEVELDIRECTION,
                                                'level5.txt', 20)
                             elif self.level_4.click(event.pos): 
                                 return Level_4(clock, events,
-                                               LEVELDIRECTION, 'level4.txt',20)
+                                               LEVELDIRECTION,
+                                               'level4.txt',20)
                             elif self.back.click(event.pos):
                                 self.position = 1 
                         elif self.position == 3 and self.back.click(
@@ -889,7 +893,7 @@ class Level():
             self.start(clock, events)
             pg.mouse.set_visible(False) # Сокрытие курсора.
             gamegoes = self.process(clock, events)
-            pg.mouse.set_visible(True) # Курсор делается видимым.
+        pg.mouse.set_visible(True) # Курсор делается видимым.
         return Menu()      
 
             
@@ -1150,6 +1154,7 @@ class Level():
                 if self.finish():
                     return False
                 pg.display.flip()
+                
             if f4:
                 motion = DOWN
                 image = self.rocket.activate(motion, self.dv)
@@ -1274,7 +1279,6 @@ class Level_3(Level):
         super().__init__(clock, events, direction, filename, dv)
         
                  
-        
 class Level_4(Level):
     """Класс 4 уровня. Регулирует действия программы после переходу к 4 уровню.
     Наследует методы класса Level."""
