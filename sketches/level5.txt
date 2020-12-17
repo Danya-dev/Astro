@@ -1,0 +1,48 @@
+Rocket:
+[51, 403]
+
+Finish:
+[369, 61]
+
+planets:
+Planet1
+[382, 302]
+Planet1
+[592, 408]
+Planet1
+[268, 438]
+Planet2
+[644, 24]
+Planet2
+[317, 170]
+Planet2
+[115, 157]
+
+asteroids:
+Asteroid1
+[299, 285]
+Asteroid1
+[515, 371]
+Asteroid1
+[572, 62]
+Asteroid2
+[306, 384]
+Asteroid2
+[684, 375]
+Asteroid2
+[197, 503]
+Asteroid2
+[72, 36]
+Asteroid2
+[28, 249]
+Asteroid1
+[188, 407]
+Asteroid1
+[258, 69]
+Asteroid1
+[455, 76]
+Asteroid2
+[486, 215]
+Asteroid2
+[435, 459]
+

@@ -1,0 +1,286 @@
+Rocket:
+[357, 293]
+
+Finish:
+[1005, 259]
+
+planets:
+Planet1
+[554, 30]
+Planet2
+[967, -503]
+Planet2
+[1431, -380]
+Planet1
+[1623, -488]
+Planet2
+[1585, 15]
+Planet2
+[1947, 217]
+Planet1
+[1497, 446]
+
+asteroids:
+Asteroid1
+[626, 279]
+Asteroid1
+[525, 336]
+Asteroid1
+[715, 340]
+Asteroid1
+[569, 388]
+Asteroid1
+[704, 422]
+Asteroid1
+[423, 472]
+Asteroid2
+[502, 163]
+Asteroid2
+[621, 351]
+Asteroid2
+[883, 387]
+Asteroid2
+[785, 414]
+Asteroid2
+[675, 223]
+Asteroid2
+[588, 142]
+Asteroid2
+[552, 219]
+Asteroid2
+[769, 302]
+Asteroid2
+[566, 475]
+Asteroid2
+[837, 459]
+Asteroid2
+[738, 501]
+Asteroid2
+[469, 518]
+Asteroid2
+[278, 541]
+Asteroid2
+[363, 512]
+Asteroid2
+[357, 586]
+Asteroid2
+[322, 648]
+Asteroid2
+[504, 665]
+Asteroid2
+[541, 608]
+Asteroid2
+[604, 543]
+Asteroid2
+[146, 501]
+Asteroid2
+[95, 348]
+Asteroid2
+[68, 432]
+Asteroid1
+[45, 232]
+Asteroid1
+[87, 87]
+Asteroid1
+[71, 133]
+Asteroid1
+[-8, 182]
+Asteroid1
+[31, 279]
+Asteroid1
+[90, 22]
+Asteroid1
+[378, -151]
+Asteroid1
+[258, -95]
+Asteroid1
+[694, -135]
+Asteroid1
+[1017, 61]
+Asteroid1
+[790, 171]
+Asteroid1
+[799, 219]
+Asteroid2
+[675, 133]
+Asteroid2
+[755, 78]
+Asteroid2
+[836, 119]
+Asteroid2
+[870, 66]
+Asteroid2
+[710, 27]
+Asteroid2
+[590, -119]
+Asteroid2
+[475, -133]
+Asteroid2
+[287, -192]
+Asteroid2
+[363, -268]
+Asteroid2
+[448, -236]
+Asteroid2
+[573, -245]
+Asteroid2
+[167, -163]
+Asteroid2
+[134, -83]
+Asteroid2
+[689, -222]
+Asteroid2
+[659, -292]
+Asteroid2
+[838, -324]
+Asteroid1
+[933, 67]
+Asteroid1
+[808, 43]
+Asteroid1
+[754, -301]
+Asteroid1
+[562, -318]
+Asteroid1
+[489, -305]
+Asteroid1
+[515, -178]
+Asteroid2
+[971, -51]
+Asteroid2
+[1037, -17]
+Asteroid2
+[1125, -99]
+Asteroid2
+[1043, -71]
+Asteroid2
+[1146, -167]
+Asteroid2
+[1160, -244]
+Asteroid2
+[811, -379]
+Asteroid2
+[854, -428]
+Asteroid2
+[1246, -33]
+Asteroid2
+[1337, -61]
+Asteroid2
+[1310, 13]
+Asteroid2
+[1426, 23]
+Asteroid2
+[1340, 74]
+Asteroid2
+[1225, 53]
+Asteroid2
+[1267, 121]
+Asteroid2
+[1393, 142]
+Asteroid1
+[1429, -28]
+Asteroid1
+[1410, -115]
+Asteroid1
+[1481, -9]
+Asteroid1
+[1324, -101]
+Asteroid1
+[1454, 70]
+Asteroid1
+[1187, 103]
+Asteroid1
+[1491, 128]
+Asteroid1
+[1187, -6]
+Asteroid2
+[1219, 388]
+Asteroid2
+[1150, 440]
+Asteroid1
+[1263, 479]
+Asteroid1
+[1332, 379]
+Asteroid1
+[1165, 379]
+Asteroid1
+[1174, 518]
+Asteroid1
+[1505, 645]
+Asteroid1
+[1625, 615]
+Asteroid1
+[1730, 613]
+Asteroid1
+[1789, 565]
+Asteroid1
+[1872, 563]
+Asteroid1
+[1930, 605]
+Asteroid2
+[1807, 641]
+Asteroid2
+[1637, 679]
+Asteroid2
+[1945, 553]
+Asteroid2
+[1977, 494]
+Asteroid2
+[1882, 493]
+Asteroid2
+[2061, 448]
+Asteroid2
+[2121, 363]
+Asteroid2
+[2114, -36]
+Asteroid2
+[2179, 44]
+Asteroid2
+[2205, 86]
+Asteroid2
+[2101, 50]
+Asteroid2
+[2109, 118]
+Asteroid2
+[2204, 202]
+Asteroid2
+[2103, -196]
+Asteroid2
+[1875, -356]
+Asteroid2
+[1951, -303]
+Asteroid2
+[1917, -250]
+Asteroid2
+[1989, -263]
+Asteroid2
+[1907, -537]
+Asteroid2
+[1957, -505]
+Asteroid2
+[1998, -445]
+Asteroid2
+[1354, -676]
+Asteroid2
+[1407, -637]
+Asteroid2
+[1457, -704]
+Asteroid2
+[1621, -689]
+Asteroid2
+[1673, -624]
+Asteroid2
+[1535, -645]
+Asteroid1
+[1520, -691]
+Asteroid1
+[1475, -595]
+Asteroid1
+[1701, -673]
+Asteroid1
+[1333, -763]
+Asteroid1
+[1267, -679]
+Asteroid1
+[1232, -617]
+
